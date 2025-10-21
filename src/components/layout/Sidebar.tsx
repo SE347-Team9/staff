@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom'
 import { 
+  Building2,
   RefreshCw, 
   Package, 
-  FileText, 
-  BarChart3, 
   CreditCard, 
-  Building2,
+  BarChart3, 
+  BookOpen,
   Home,
   ChevronLeft,
   ChevronRight
@@ -22,6 +22,12 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
 
   const menuItems = [
     {
+      id: 'agency',
+      icon: Building2,
+      label: 'Quản lý đại lý',
+      path: '/agency-management'
+    },
+    {
       id: 'export',
       icon: RefreshCw,
       label: 'Quản lý xuất hàng',
@@ -30,20 +36,8 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
     {
       id: 'receive',
       icon: Package,
-      label: 'Nhận hàng',
+      label: 'Quản lý nhập hàng',
       path: '/receive-goods'
-    },
-    {
-      id: 'request',
-      icon: FileText,
-      label: 'Gửi yêu cầu phân phối',
-      path: '/distribution-request'
-    },
-    {
-      id: 'report',
-      icon: BarChart3,
-      label: 'Lập báo cáo',
-      path: '/reports'
     },
     {
       id: 'payment',
@@ -52,10 +46,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
       path: '/payment-management'
     },
     {
-      id: 'agency',
-      icon: Building2,
-      label: 'Quản lý đại lý',
-      path: '/agency-management'
+      id: 'report',
+      icon: BarChart3,
+      label: 'Lập báo cáo',
+      path: '/reports'
+    },
+    {
+      id: 'regulations',
+      icon: BookOpen,
+      label: 'Quản lý quy định',
+      path: '/regulations'
     }
   ]
 

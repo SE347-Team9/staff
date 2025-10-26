@@ -6,10 +6,12 @@ import Reports from './pages/Report/Reports'
 import AddReport from './pages/Report/AddReport'
 import ViewReport from './pages/Report/ViewReport'
 import AgencyManagement from './pages/AgencyManagement/AgencyManagement'
+import AddAgency from './pages/AgencyManagement/AddAgency'
 import ExportManagement from './pages/ExportManagement/ExportManagement'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import Regulations from './pages/Regulations/Regulations'
+import NotFound from './routes/NotFound/NotFound'
 
 function App() {
   return (
@@ -20,6 +22,11 @@ function App() {
         <Route path="/agency-management" element={
           <MainLayout>
             <AgencyManagement />
+          </MainLayout>
+        } />
+        <Route path="/add-agency" element={
+          <MainLayout>
+            <AddAgency />
           </MainLayout>
         } />
         <Route path="/export-management" element={
@@ -58,6 +65,7 @@ function App() {
           </MainLayout>
         } />
         <Route path="/" element={<Navigate to="/agency-management" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )

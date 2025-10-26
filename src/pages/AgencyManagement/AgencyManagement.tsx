@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Users, Eye, Edit, Search, UserPlus, TrendingUp } from 'lucide-react'
 import './AgencyManagement.css'
 
@@ -12,6 +13,7 @@ interface Agency {
 }
 
 const AgencyManagement = () => {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
 
   // Mock data
@@ -53,8 +55,7 @@ const AgencyManagement = () => {
   }
 
   const handleAddAgency = () => {
-    console.log('Add new agency')
-    // Navigate to add page
+    navigate('/add-agency')
   }
 
   return (

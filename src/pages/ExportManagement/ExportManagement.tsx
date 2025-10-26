@@ -249,7 +249,7 @@ const ExportManagement = () => {
                       <td className="col-agency">{exp.agency}</td>
                       <td className="col-date">{exp.date}</td>
                       <td className="col-total">
-                        <span className="total-amount">{formatCurrency(exp.total)}</span>
+                        <span className="export-total-amount">{formatCurrency(exp.total)}</span>
                       </td>
                       <td className="col-status">
                         <span className={`status-badge status-${exp.status}`}>

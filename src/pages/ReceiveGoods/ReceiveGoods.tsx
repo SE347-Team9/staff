@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Package, RefreshCw, Plus, Search, Eye, Edit, Trash2, TrendingUp, TrendingDown, AlertTriangle, Activity } from 'lucide-react'
 import './ReceiveGoods.css'
 
@@ -10,6 +11,7 @@ interface Receipt {
 }
 
 const ReceiveGoods = () => {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [showInventoryModal, setShowInventoryModal] = useState(false)
 
@@ -69,7 +71,7 @@ const ReceiveGoods = () => {
   }
 
   const handleCreateReceipt = () => {
-    console.log('Create new receipt')
+    navigate('/create-receipt')
   }
 
   const handleRefresh = () => {

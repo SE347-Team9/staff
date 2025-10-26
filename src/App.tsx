@@ -10,6 +10,7 @@ import AddAgency from './pages/AgencyManagement/AddAgency'
 import ExportManagement from './pages/ExportManagement/ExportManagement'
 import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
+import CreateReceipt from './pages/ReceiveGoods/CreateReceipt'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import Regulations from './pages/Regulations/Regulations'
 import NotFound from './routes/NotFound/NotFound'
@@ -43,6 +44,11 @@ function App() {
         <Route path="/receive-goods" element={
           <MainLayout>
             <ReceiveGoods />
+          </MainLayout>
+        } />
+        <Route path="/create-receipt" element={
+          <MainLayout>
+            <CreateReceipt />
           </MainLayout>
         } />
         <Route path="/payment-management" element={

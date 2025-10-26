@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Truck, Search, Plus, AlertCircle, Eye, Edit, Trash2, List } from 'lucide-react'
 import './ExportManagement.css'
 
@@ -13,10 +14,30 @@ interface Export {
 }
 
 const ExportManagement = () => {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAgency, setSelectedAgency] = useState('all')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [showRequestModal, setShowRequestModal] = useState(false)
+  const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
+  const [inventoryLoading, setInventoryLoading] = useState(false)
+  const [inventoryData, setInventoryData] = useState<any>(null)
+
+  // Mock data for distribution requests
+  const distributionRequests = [
+    {
+      id: '1',
+      code: 'PX005',
+      agency: 'Đại lý Nghĩa',
+      date: '2025-10-11',
+      status: 'pending',
+      items: [
+        { name: 'Bia Hà Nội', requested: 12, available: 96 },
+        { name: 'Gạo ST25', requested: 12, available: 190 }
+      ]
+    }
+  ]
 
   // Mock data
   const exports: Export[] = [
@@ -71,11 +92,38 @@ const ExportManagement = () => {
   }
 
   const handleCreateExport = () => {
-    console.log('Create new export')
+    navigate('/create-export')
   }
 
   const handleConfirmFeedback = () => {
-    console.log('Confirm feedback request')
+    setShowRequestModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowRequestModal(false)
+  }
+
+  const handleCheckInventory = (requestId: string) => {
+    setSelectedRequest(requestId)
+    setInventoryLoading(true)
+    
+    // Simulate API call
+    setTimeout(() => {
+      const request = distributionRequests.find(r => r.id === requestId)
+      setInventoryData(request)
+      setInventoryLoading(false)
+    }, 1000)
+  }
+
+  const handleConfirmExport = () => {
+    // Navigate to create export with pre-filled data
+    navigate('/create-export')
+  }
+
+  const handlePauseRequest = () => {
+    setSelectedRequest(null)
+    setInventoryData(null)
+    alert('Yêu cầu đã được tạm hoãn')
   }
 
   return (
@@ -123,7 +171,7 @@ const ExportManagement = () => {
           <div className="main-header-actions">
             <button className="export-management__action-btn export-management__action-btn--orange" onClick={handleConfirmFeedback}>
               <AlertCircle size={20} />
-              <span>Xác nhận yêu cầu phản hồi</span>
+              <span>Xác nhận yêu cầu phân phối</span>
             </button>
             <button className="export-management__action-btn export-management__action-btn--blue" onClick={handleCreateExport}>
               <Plus size={20} />
@@ -248,6 +296,106 @@ const ExportManagement = () => {
           </div>
         </div>
       </div>
+
+      {/* Distribution Request Modal */}
+      {showRequestModal && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <AlertCircle size={28} className="modal-icon" />
+              <h2 className="modal-title">Yêu cầu xuất hàng từ đại lý</h2>
+            </div>
+            
+            <p className="modal-description">
+              Danh sách các đại lý gửi yêu cầu xuất hàng, xác nhận để lập phiếu xuất.
+            </p>
+
+            <div className="request-table-wrapper">
+              <table className="request-table">
+                <thead>
+                  <tr>
+                    <th>MÃ YÊU CẦU</th>
+                    <th>ĐẠI LÝ</th>
+                    <th>NGÀY YÊU CẦU</th>
+                    <th>THAO TÁC</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {distributionRequests.map((request) => (
+                    <tr key={request.id}>
+                      <td className="request-code">{request.code}</td>
+                      <td>{request.agency}</td>
+                      <td>{request.date}</td>
+                      <td>
+                        {selectedRequest === request.id ? (
+                          <div className="inventory-check-section">
+                            {inventoryLoading ? (
+                              <div className="loading-spinner">
+                                <div className="spinner"></div>
+                                <span>Đang kiểm tra...</span>
+                              </div>
+                            ) : inventoryData ? (
+                              <div className="inventory-details">
+                                <div className="inventory-status">
+                                  <span className="status-label">Chi tiết tồn kho:</span>
+                                  <span className="status-badge status-sufficient">ĐỦ TỒN KHO</span>
+                                </div>
+                                
+                                <div className="inventory-items">
+                                  {inventoryData.items.map((item: any, idx: number) => (
+                                    <div key={idx} className="inventory-item">
+                                      <div className="item-info">
+                                        <span className="item-name">{item.name}</span>
+                                        <span className="item-quantity">
+                                          Yêu cầu: {item.requested} | Có sẵn: {item.available}
+                                        </span>
+                                      </div>
+                                      <span className="item-status">{item.requested}/{item.available} ✓</span>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div className="inventory-summary">
+                                  <span className="summary-text">Tóm tắt:</span>
+                                  <span className="summary-result">
+                                    ✓ Tất cả mặt hàng đều đủ tồn kho - Có thể xác nhận xuất hàng
+                                  </span>
+                                </div>
+
+                                <div className="inventory-actions">
+                                  <button className="btn-confirm" onClick={handleConfirmExport}>
+                                    ✓ Xác nhận
+                                  </button>
+                                  <button className="btn-pause" onClick={handlePauseRequest}>
+                                    ⊗ Tạm hoãn
+                                  </button>
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <button 
+                            className="btn-check-inventory"
+                            onClick={() => handleCheckInventory(request.id)}
+                          >
+                            Kiểm tra tồn kho
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-modal-close" onClick={handleCloseModal}>
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

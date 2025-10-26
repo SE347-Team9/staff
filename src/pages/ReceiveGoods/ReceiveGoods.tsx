@@ -11,6 +11,18 @@ interface Receipt {
 
 const ReceiveGoods = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const [showInventoryModal, setShowInventoryModal] = useState(false)
+
+  // Mock inventory data
+  const inventoryItems = [
+    { id: 1, name: 'Bia Hà Nội', unit: 'Thùng', quantity: 96, price: 250000 },
+    { id: 2, name: 'Gạo ST25', unit: 'Kg', quantity: 190, price: 25000 },
+    { id: 3, name: 'Nước ngọt Coca', unit: 'Chai', quantity: 280, price: 10000 },
+    { id: 4, name: 'Nước ngọt Pepsi', unit: 'Lon', quantity: 360, price: 9000 },
+    { id: 5, name: 'Snack Oishi', unit: 'Gói', quantity: 160, price: 12000 },
+    { id: 6, name: 'Sữa Vinamilk', unit: 'Lốc', quantity: 144, price: 60000 },
+    { id: 7, name: 'Test Item', unit: 'Piece', quantity: 50, price: 100 }
+  ]
 
   // Mock data
   const receipts: Receipt[] = [
@@ -65,11 +77,26 @@ const ReceiveGoods = () => {
   }
 
   const handleViewInventory = () => {
-    console.log('View inventory')
+    setShowInventoryModal(true)
+  }
+
+  const handleCloseInventoryModal = () => {
+    setShowInventoryModal(false)
+  }
+
+  const handleRefreshInventory = () => {
+    console.log('Refresh inventory')
+    // TODO: Call API to refresh inventory data
   }
 
   const handleViewReport = () => {
     console.log('View report')
+  }
+
+  const getQuantityClass = (quantity: number) => {
+    if (quantity < 100) return 'quantity-low'
+    if (quantity < 200) return 'quantity-medium'
+    return 'quantity-high'
   }
 
   return (
@@ -279,6 +306,77 @@ const ReceiveGoods = () => {
           </table>
         </div>
       </div>
+
+      {/* Inventory Modal */}
+      {showInventoryModal && (
+        <div className="inventory-modal-overlay" onClick={handleCloseInventoryModal}>
+          <div className="inventory-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="inventory-modal-header">
+              <div className="inventory-modal-header-left">
+                <div className="inventory-modal-icon">
+                  <Package size={28} />
+                </div>
+                <h2 className="inventory-modal-title">Tồn kho hiện tại</h2>
+              </div>
+              <button className="inventory-modal-close" onClick={handleCloseInventoryModal}>
+                ×
+              </button>
+            </div>
+            
+            <p className="inventory-modal-description">
+              Danh sách sản phẩm và số lượng tồn kho
+            </p>
+
+            <div className="inventory-table-container">
+              <table className="inventory-table">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mặt hàng</th>
+                    <th>Đơn vị</th>
+                    <th>Tồn kho</th>
+                    <th>Giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventoryItems.map((item, index) => (
+                    <tr key={item.id}>
+                      <td className="inventory-stt">{index + 1}</td>
+                      <td className="inventory-name">{item.name}</td>
+                      <td className="inventory-unit">{item.unit}</td>
+                      <td>
+                        <span className={`inventory-quantity ${getQuantityClass(item.quantity)}`}>
+                          {item.quantity}
+                        </span>
+                      </td>
+                      <td className="inventory-price">
+                        {item.price.toLocaleString('vi-VN')} VND
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="inventory-modal-footer">
+              <div className="inventory-summary">
+                <span className="inventory-summary-label">
+                  {inventoryItems.length} sản phẩm
+                </span>
+              </div>
+              <div className="inventory-modal-actions">
+                <button className="btn-inventory-refresh" onClick={handleRefreshInventory}>
+                  <RefreshCw size={18} />
+                  <span>Làm mới</span>
+                </button>
+                <button className="btn-inventory-close" onClick={handleCloseInventoryModal}>
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

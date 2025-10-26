@@ -8,6 +8,7 @@ import ViewReport from './pages/Report/ViewReport'
 import AgencyManagement from './pages/AgencyManagement/AgencyManagement'
 import AddAgency from './pages/AgencyManagement/AddAgency'
 import ExportManagement from './pages/ExportManagement/ExportManagement'
+import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import Regulations from './pages/Regulations/Regulations'
@@ -32,6 +33,11 @@ function App() {
         <Route path="/export-management" element={
           <MainLayout>
             <ExportManagement />
+          </MainLayout>
+        } />
+        <Route path="/create-export" element={
+          <MainLayout>
+            <CreateExport />
           </MainLayout>
         } />
         <Route path="/receive-goods" element={

@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ViewAgency from './pages/AgencyManagement/ViewAgency';
 import EditPayment from './pages/PaymentManagement/EditPayment';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
@@ -26,114 +28,117 @@ import ViewRegulation from './pages/Regulations/ViewRegulation'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/agency-management" element={
-          <MainLayout>
-            <AgencyManagement />
-          </MainLayout>
-        } />
-        <Route path="/add-agency" element={
-          <MainLayout>
-            <AddAgency />
-          </MainLayout>
-        } />
-        <Route path="/agency/view/:id" element={
-          <MainLayout>
-            <ViewAgency />
-          </MainLayout>
-        } />
-        <Route path="/edit-agency" element={
-          <MainLayout>
-            <EditAgency />
-          </MainLayout>
-        } />
-        <Route path="/export-management" element={
-          <MainLayout>
-            <ExportManagement />
-          </MainLayout>
-        } />
-        <Route path="/create-export" element={
-          <MainLayout>
-            <CreateExport />
-          </MainLayout>
-        } />
-        <Route path="/edit-export/:id" element={
-          <MainLayout>
-            <EditExport />
-          </MainLayout>
-        } />
-        <Route path="/receive-goods" element={
-          <MainLayout>
-            <ReceiveGoods />
-          </MainLayout>
-        } />
-        <Route path="/create-receipt" element={
-          <MainLayout>
-            <CreateReceipt />
-          </MainLayout>
-        } />
-        <Route path="/create-receipt-voucher" element={
-          <MainLayout>
-            <CreateReceiptVoucher />
-          </MainLayout>
-        } />
-        <Route path="/payment-management" element={
-          <MainLayout>
-            <PaymentManagement />
-          </MainLayout>
-        } />
-        <Route path="/payment/edit/:id" element={
-          <MainLayout>
-            <EditPayment />
-          </MainLayout>
-        } />
-        <Route path="/regulations" element={
-          <MainLayout>
-            <Regulations />
-          </MainLayout>
-        } />
-        <Route path="/regulations/view/:id" element={
-          <MainLayout>
-            <ViewRegulation />
-          </MainLayout>
-        } />
-        <Route path="/reports" element={
-          <MainLayout>
-            <Reports />
-          </MainLayout>
-        } />
-        <Route path="/add-report" element={
-          <MainLayout>
-            <AddReport />
-          </MainLayout>
-        } />
-        <Route path="/view-report/:reportId" element={
-          <MainLayout>
-            <ViewReport />
-          </MainLayout>
-        } />
-        <Route path="/view-export/:id" element={
-          <MainLayout>
-            <ViewExport />
-          </MainLayout>
-        } />
-        <Route path="/import/view/:id" element={
-          <MainLayout>
-            <ViewImport />
-          </MainLayout>
-        } />
-        <Route path="/import/edit/:id" element={
-          <MainLayout>
-            <EditImport />
-          </MainLayout>
-        } />
-        <Route path="/" element={<Navigate to="/agency-management" replace />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/agency-management" element={
+            <MainLayout>
+              <AgencyManagement />
+            </MainLayout>
+          } />
+          <Route path="/add-agency" element={
+            <MainLayout>
+              <AddAgency />
+            </MainLayout>
+          } />
+          <Route path="/agency/view/:id" element={
+            <MainLayout>
+              <ViewAgency />
+            </MainLayout>
+          } />
+          <Route path="/edit-agency" element={
+            <MainLayout>
+              <EditAgency />
+            </MainLayout>
+          } />
+          <Route path="/export-management" element={
+            <MainLayout>
+              <ExportManagement />
+            </MainLayout>
+          } />
+          <Route path="/create-export" element={
+            <MainLayout>
+              <CreateExport />
+            </MainLayout>
+          } />
+          <Route path="/edit-export/:id" element={
+            <MainLayout>
+              <EditExport />
+            </MainLayout>
+          } />
+          <Route path="/receive-goods" element={
+            <MainLayout>
+              <ReceiveGoods />
+            </MainLayout>
+          } />
+          <Route path="/create-receipt" element={
+            <MainLayout>
+              <CreateReceipt />
+            </MainLayout>
+          } />
+          <Route path="/create-receipt-voucher" element={
+            <MainLayout>
+              <CreateReceiptVoucher />
+            </MainLayout>
+          } />
+          <Route path="/payment-management" element={
+            <MainLayout>
+              <PaymentManagement />
+            </MainLayout>
+          } />
+          <Route path="/payment/edit/:id" element={
+            <MainLayout>
+              <EditPayment />
+            </MainLayout>
+          } />
+          <Route path="/regulations" element={
+            <MainLayout>
+              <Regulations />
+            </MainLayout>
+          } />
+          <Route path="/regulations/view/:id" element={
+            <MainLayout>
+              <ViewRegulation />
+            </MainLayout>
+          } />
+          <Route path="/reports" element={
+            <MainLayout>
+              <Reports />
+            </MainLayout>
+          } />
+          <Route path="/add-report" element={
+            <MainLayout>
+              <AddReport />
+            </MainLayout>
+          } />
+          <Route path="/view-report/:reportId" element={
+            <MainLayout>
+              <ViewReport />
+            </MainLayout>
+          } />
+          <Route path="/view-export/:id" element={
+            <MainLayout>
+              <ViewExport />
+            </MainLayout>
+          } />
+          <Route path="/import/view/:id" element={
+            <MainLayout>
+              <ViewImport />
+            </MainLayout>
+          } />
+          <Route path="/import/edit/:id" element={
+            <MainLayout>
+              <EditImport />
+            </MainLayout>
+          } />
+          <Route path="/" element={<Navigate to="/agency-management" replace />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+    </>
   )
 }
 

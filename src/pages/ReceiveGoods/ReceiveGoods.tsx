@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Package, RefreshCw, Plus, Search, Eye, Edit, Trash2, TrendingUp, TrendingDown, AlertTriangle, Activity } from 'lucide-react'
+import { toast } from 'react-toastify';
 import './ReceiveGoods.css'
 
 interface Receipt {
@@ -27,7 +28,7 @@ const ReceiveGoods = () => {
   ]
 
   // Mock data
-  const receipts: Receipt[] = [
+  const [receipts, setReceipts] = useState<Receipt[]>([
     {
       id: '1',
       code: '#4',
@@ -40,7 +41,9 @@ const ReceiveGoods = () => {
       date: '3/5/2024',
       total: 2000000
     }
-  ]
+  ]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteReceipt, setDeleteReceipt] = useState<Receipt | null>(null);
 
   const totalReceipts = 4
   const totalValue = 13300000
@@ -67,8 +70,24 @@ const ReceiveGoods = () => {
   }
 
   const handleDelete = (id: string) => {
-    console.log('Delete receipt:', id)
+    const receipt = receipts.find(r => r.id === id) || null;
+    setDeleteReceipt(receipt);
+    setShowDeleteModal(true);
   }
+
+  const handleConfirmDelete = () => {
+    if (deleteReceipt) {
+      setReceipts(prev => prev.filter(r => r.id !== deleteReceipt.id));
+      toast.success('Đã xóa phiếu nhập thành công!');
+    }
+    setShowDeleteModal(false);
+    setDeleteReceipt(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setDeleteReceipt(null);
+  };
 
   const handleCreateReceipt = () => {
     navigate('/create-receipt')
@@ -304,6 +323,23 @@ const ReceiveGoods = () => {
                   </td>
                 </tr>
               )}
+      {/* Popup xác nhận xóa phiếu nhập */}
+      {showDeleteModal && deleteReceipt && (
+        <div className="receive-goods__modal-overlay" onClick={handleCancelDelete}>
+          <div className="receive-goods__modal-delete" onClick={e => e.stopPropagation()}>
+            <div className="receive-goods__modal-delete-iconbox">
+              <Trash2 size={32} />
+            </div>
+            <div className="receive-goods__modal-delete-title">Xác nhận xóa phiếu nhập?</div>
+            <div className="receive-goods__modal-delete-desc">Bạn có chắc chắn muốn xóa phiếu nhập <b>{deleteReceipt.code}</b> không?</div>
+            <div className="receive-goods__modal-delete-warning">Hành động này không thể hoàn tác!</div>
+            <div className="receive-goods__modal-delete-actions">
+              <button className="receive-goods__modal-delete-cancel" onClick={handleCancelDelete}>Hủy</button>
+              <button className="receive-goods__modal-delete-confirm" onClick={handleConfirmDelete}>Xóa</button>
+            </div>
+          </div>
+        </div>
+      )}
             </tbody>
           </table>
         </div>

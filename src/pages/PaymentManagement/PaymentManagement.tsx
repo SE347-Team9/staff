@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify';
 import { DollarSign, Plus, Search, Edit, Trash2, CheckCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import './PaymentManagement.css'
@@ -17,7 +18,7 @@ const PaymentManagement = () => {
   const navigate = useNavigate()
 
   // Mock data
-  const payments: Payment[] = [
+  const [payments, setPayments] = useState<Payment[]>([
     {
       id: '1',
       code: '2',
@@ -34,7 +35,7 @@ const PaymentManagement = () => {
       amount: 500000,
       status: 'paid'
     }
-  ]
+  ]);
 
   const totalPayments = 2
   const totalAmount = 800000
@@ -55,9 +56,28 @@ const PaymentManagement = () => {
     navigate(`/payment/edit/${id}`);
   }
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePayment, setDeletePayment] = useState<Payment | null>(null);
+
   const handleDelete = (id: string) => {
-    console.log('Delete payment:', id)
-  }
+    const payment = payments.find(p => p.id === id) || null;
+    setDeletePayment(payment);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deletePayment) {
+      setPayments(prev => prev.filter(p => p.id !== deletePayment.id));
+      toast.success('Đã xóa phiếu thu thành công!');
+    }
+    setShowDeleteModal(false);
+    setDeletePayment(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setDeletePayment(null);
+  };
 
   const handleAddPayment = () => {
     navigate('/create-receipt-voucher');
@@ -195,6 +215,23 @@ const PaymentManagement = () => {
           </table>
         </div>
       </div>
+      {/* Popup xác nhận xóa phiếu thu */}
+      {showDeleteModal && deletePayment && (
+        <div className="payment-management__modal-overlay" onClick={handleCancelDelete}>
+          <div className="payment-management__modal-delete" onClick={e => e.stopPropagation()}>
+            <div className="payment-management__modal-delete-iconbox">
+              <Trash2 size={32} />
+            </div>
+            <div className="payment-management__modal-delete-title">Xác nhận xóa phiếu thu?</div>
+            <div className="payment-management__modal-delete-desc">Bạn có chắc chắn muốn xóa phiếu thu <b>{deletePayment.code}</b> không?</div>
+            <div className="payment-management__modal-delete-warning">Hành động này không thể hoàn tác!</div>
+            <div className="payment-management__modal-delete-actions">
+              <button className="payment-management__modal-delete-cancel" onClick={handleCancelDelete}>Hủy</button>
+              <button className="payment-management__modal-delete-confirm" onClick={handleConfirmDelete}>Xóa</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

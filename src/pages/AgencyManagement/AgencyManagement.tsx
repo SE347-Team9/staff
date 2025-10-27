@@ -51,7 +51,7 @@ const AgencyManagement = () => {
 
   const handleEdit = (id: string) => {
     console.log('Edit agency:', id)
-    // Navigate to edit page
+    navigate(`/edit-agency`)
   }
 
   const handleAddAgency = () => {

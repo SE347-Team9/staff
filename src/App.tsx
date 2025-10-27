@@ -15,6 +15,7 @@ import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher'
 import Regulations from './pages/Regulations/Regulations'
 import NotFound from './routes/NotFound/NotFound'
+import EditAgency from './pages/AgencyManagement/EditAgency'
 
 function App() {
   return (
@@ -30,6 +31,11 @@ function App() {
         <Route path="/add-agency" element={
           <MainLayout>
             <AddAgency />
+          </MainLayout>
+        } />
+        <Route path="/edit-agency" element={
+          <MainLayout>
+            <EditAgency />
           </MainLayout>
         } />
         <Route path="/export-management" element={

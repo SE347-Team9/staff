@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Eye, Edit, Search, UserPlus, TrendingUp } from 'lucide-react'
+import { Users, Eye, Edit, Search, UserPlus} from 'lucide-react'
 import './AgencyManagement.css'
 
 interface Agency {

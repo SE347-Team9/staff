@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DollarSign, Plus, Search, Edit, Trash2, CheckCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import './PaymentManagement.css'
 
 interface Payment {
@@ -13,6 +14,7 @@ interface Payment {
 
 const PaymentManagement = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
 
   // Mock data
   const payments: Payment[] = [
@@ -58,7 +60,7 @@ const PaymentManagement = () => {
   }
 
   const handleAddPayment = () => {
-    console.log('Add new payment')
+    navigate('/create-receipt-voucher');
   }
 
   return (

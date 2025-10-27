@@ -12,6 +12,7 @@ import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import CreateReceipt from './pages/ReceiveGoods/CreateReceipt'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
+import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher'
 import Regulations from './pages/Regulations/Regulations'
 import NotFound from './routes/NotFound/NotFound'
 
@@ -49,6 +50,11 @@ function App() {
         <Route path="/create-receipt" element={
           <MainLayout>
             <CreateReceipt />
+          </MainLayout>
+        } />
+        <Route path="/create-receipt-voucher" element={
+          <MainLayout>
+            <CreateReceiptVoucher />
           </MainLayout>
         } />
         <Route path="/payment-management" element={

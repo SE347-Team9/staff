@@ -52,7 +52,7 @@ const PaymentManagement = () => {
   }
 
   const handleEdit = (id: string) => {
-    console.log('Edit payment:', id)
+    navigate(`/payment/edit/${id}`);
   }
 
   const handleDelete = (id: string) => {

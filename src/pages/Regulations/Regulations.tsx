@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { BookOpen, Eye, Search, Plus } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { BookOpen, Eye, Search } from 'lucide-react'
 import './Regulations.css'
 
 interface Regulation {
@@ -40,13 +41,11 @@ const Regulations = () => {
     return new Intl.NumberFormat('vi-VN').format(num)
   }
 
+  const navigate = useNavigate();
   const handleView = (id: string) => {
-    console.log('View regulation:', id)
+    navigate(`/regulations/view/${id}`)
   }
 
-  const handleAddRegulation = () => {
-    console.log('Add new regulation')
-  }
 
   return (
     <div className="regulations-page">

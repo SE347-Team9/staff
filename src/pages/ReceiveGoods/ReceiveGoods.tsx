@@ -63,7 +63,7 @@ const ReceiveGoods = () => {
   }
 
   const handleEdit = (id: string) => {
-    console.log('Edit receipt:', id)
+    navigate(`/import/edit/${id}`)
   }
 
   const handleDelete = (id: string) => {
@@ -92,7 +92,7 @@ const ReceiveGoods = () => {
   }
 
   const handleViewReport = () => {
-    console.log('View report')
+    navigate('/reports')
   }
 
   const getQuantityClass = (quantity: number) => {
@@ -201,7 +201,7 @@ const ReceiveGoods = () => {
           </div>
         </div>
 
-        <div className="receive-goods__action-card receive-goods__action-card--purple" onClick={handleViewReport}>
+        <div className="receive-goods__action-card receive-goods__action-card--purple" onClick={handleViewReport} style={{ cursor: 'pointer' }}>
           <div className="receive-goods__action-icon">
             <Activity size={32} />
           </div>

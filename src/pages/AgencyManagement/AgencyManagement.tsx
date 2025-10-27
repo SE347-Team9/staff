@@ -45,8 +45,7 @@ const AgencyManagement = () => {
   )
 
   const handleView = (id: string) => {
-    console.log('View agency:', id)
-    // Navigate to view page
+    navigate(`/agency/view/${id}`)
   }
 
   const handleEdit = (id: string) => {

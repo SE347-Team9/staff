@@ -1,3 +1,5 @@
+import ViewAgency from './pages/AgencyManagement/ViewAgency';
+import EditPayment from './pages/PaymentManagement/EditPayment';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './routes/auth/Login'
 import Register from './routes/auth/Register'
@@ -19,6 +21,8 @@ import EditAgency from './pages/AgencyManagement/EditAgency'
 import ViewExport from './pages/ExportManagement/ViewExport'
 import EditExport from './pages/ExportManagement/EditExport'
 import ViewImport from './pages/ReceiveGoods/ViewImport'
+import EditImport from './pages/ReceiveGoods/EditImport'
+import ViewRegulation from './pages/Regulations/ViewRegulation'
 
 function App() {
   return (
@@ -34,6 +38,11 @@ function App() {
         <Route path="/add-agency" element={
           <MainLayout>
             <AddAgency />
+          </MainLayout>
+        } />
+        <Route path="/agency/view/:id" element={
+          <MainLayout>
+            <ViewAgency />
           </MainLayout>
         } />
         <Route path="/edit-agency" element={
@@ -76,9 +85,19 @@ function App() {
             <PaymentManagement />
           </MainLayout>
         } />
+        <Route path="/payment/edit/:id" element={
+          <MainLayout>
+            <EditPayment />
+          </MainLayout>
+        } />
         <Route path="/regulations" element={
           <MainLayout>
             <Regulations />
+          </MainLayout>
+        } />
+        <Route path="/regulations/view/:id" element={
+          <MainLayout>
+            <ViewRegulation />
           </MainLayout>
         } />
         <Route path="/reports" element={
@@ -104,6 +123,11 @@ function App() {
         <Route path="/import/view/:id" element={
           <MainLayout>
             <ViewImport />
+          </MainLayout>
+        } />
+        <Route path="/import/edit/:id" element={
+          <MainLayout>
+            <EditImport />
           </MainLayout>
         } />
         <Route path="/" element={<Navigate to="/agency-management" replace />} />

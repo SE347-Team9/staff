@@ -16,6 +16,9 @@ import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher
 import Regulations from './pages/Regulations/Regulations'
 import NotFound from './routes/NotFound/NotFound'
 import EditAgency from './pages/AgencyManagement/EditAgency'
+import ViewExport from './pages/ExportManagement/ViewExport'
+import EditExport from './pages/ExportManagement/EditExport'
+import ViewImport from './pages/ReceiveGoods/ViewImport'
 
 function App() {
   return (
@@ -46,6 +49,11 @@ function App() {
         <Route path="/create-export" element={
           <MainLayout>
             <CreateExport />
+          </MainLayout>
+        } />
+        <Route path="/edit-export/:id" element={
+          <MainLayout>
+            <EditExport />
           </MainLayout>
         } />
         <Route path="/receive-goods" element={
@@ -86,6 +94,16 @@ function App() {
         <Route path="/view-report/:reportId" element={
           <MainLayout>
             <ViewReport />
+          </MainLayout>
+        } />
+        <Route path="/view-export/:id" element={
+          <MainLayout>
+            <ViewExport />
+          </MainLayout>
+        } />
+        <Route path="/import/view/:id" element={
+          <MainLayout>
+            <ViewImport />
           </MainLayout>
         } />
         <Route path="/" element={<Navigate to="/agency-management" replace />} />

@@ -80,11 +80,11 @@ const ExportManagement = () => {
   }
 
   const handleView = (id: string) => {
-    console.log('View export:', id)
+    navigate(`/view-export/${id}`);
   }
 
   const handleEdit = (id: string) => {
-    console.log('Edit export:', id)
+    navigate(`/edit-export/${id}`)
   }
 
   const handleDelete = (id: string) => {

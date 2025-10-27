@@ -59,7 +59,7 @@ const ReceiveGoods = () => {
   }
 
   const handleView = (id: string) => {
-    console.log('View receipt:', id)
+    navigate(`/import/view/${id}`)
   }
 
   const handleEdit = (id: string) => {

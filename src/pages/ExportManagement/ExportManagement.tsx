@@ -23,11 +23,23 @@ const ExportManagement = () => {
   const [endDate, setEndDate] = useState('')
   const [showRequestModal, setShowRequestModal] = useState(false)
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
-  const [inventoryLoading] = useState(false)
+  const [inventoryLoading, setInventoryLoading] = useState(false)
   // Stub handlers để tránh lỗi biên dịch
   const handleCloseModal = () => setShowRequestModal(false);
   const handleConfirmExport = () => {};
-  const handleCheckInventory = (_id: string) => {};
+  const handleCheckInventory = (id: string) => {
+    setSelectedRequest(id);
+    setInventoryLoading(true);
+    setInventoryData(null);
+    // Simulate loading and then show inventory data
+    setTimeout(() => {
+      const req = distributionRequests.find(r => r.id === id);
+      if (req) {
+        setInventoryData(req);
+      }
+      setInventoryLoading(false);
+    }, 1200);
+  };
   const [inventoryData, setInventoryData] = useState<any>(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteExport, setDeleteExport] = useState<Export | null>(null);
@@ -120,28 +132,7 @@ const ExportManagement = () => {
   }
 
   const handleConfirmFeedback = () => {
-    setShowRequestModal(true)
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-delete-modern">
-            <div className="modal-delete-modern-iconbox">
-              <Trash2 size={32} />
-            </div>
-            <div className="modal-delete-modern-title">Xác nhận xóa phiếu xuất?</div>
-            <div className="modal-delete-modern-desc">
-              Bạn có chắc chắn muốn xóa phiếu xuất <b>{deleteExport?.code}</b> không?
-            </div>
-            <div className="modal-delete-modern-warning">
-              Hành động này không thể hoàn tác!
-            </div>
-            <div className="modal-delete-modern-actions">
-              <button className="btn-modal-cancel-modern" onClick={handleCancelDelete}>Hủy</button>
-              <button className="btn-modal-delete-modern" onClick={handleConfirmDelete}>Xóa</button>
-            </div>
-          </div>
-        </div>
-      )}
-    navigate('/create-export')
+    setShowRequestModal(true);
   }
 
   const handlePauseRequest = () => {

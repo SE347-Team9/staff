@@ -1,5 +1,5 @@
 /* Popup xác nhận xóa hiện đại */
-.modal-delete-modern {
+.modal-content.modal-delete-modern {
   max-width: 370px;
   background: #fff;
   border-radius: 18px;

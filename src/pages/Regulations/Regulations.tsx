@@ -106,7 +106,6 @@ const Regulations = () => {
                         title="Xem chi tiết"
                       >
                         <Eye size={18} />
-                        <span>Xem chi tiết</span>
                       </button>
                     </div>
                   </td>

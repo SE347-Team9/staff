@@ -189,7 +189,6 @@ const PaymentManagement = () => {
                           title="Sửa"
                         >
                           <Edit size={18} />
-                          <span>Sửa</span>
                         </button>
                         <button
                           className="payment-management__action-btn payment-management__action-btn--delete"
@@ -197,7 +196,6 @@ const PaymentManagement = () => {
                           title="Xóa"
                         >
                           <Trash2 size={18} />
-                          <span>Xóa</span>
                         </button>
                       </div>
                     </td>

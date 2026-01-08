@@ -5,6 +5,7 @@ import EditPayment from './pages/PaymentManagement/EditPayment';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './routes/auth/Login'
 import Register from './routes/auth/Register'
+import HomePage from './routes/home/index'
 import MainLayout from './components/layout/MainLayout'
 import Reports from './pages/Report/Reports'
 import AddReport from './pages/Report/AddReport'
@@ -33,6 +34,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/home" element={
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          } />
           <Route path="/agency-management" element={
             <MainLayout>
               <AgencyManagement />
@@ -133,7 +139,7 @@ function App() {
               <EditImport />
             </MainLayout>
           } />
-          <Route path="/" element={<Navigate to="/agency-management" replace />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

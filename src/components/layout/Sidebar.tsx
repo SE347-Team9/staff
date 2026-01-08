@@ -22,6 +22,12 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
 
   const menuItems = [
     {
+      id: 'home',
+      icon: Home,
+      label: 'Trang chủ',
+      path: '/home'
+    },
+    {
       id: 'agency',
       icon: Building2,
       label: 'Quản lý đại lý',

@@ -1,0 +1,88 @@
+{
+  "hash": "b6b9a0fc",
+  "configHash": "d289638b",
+  "lockfileHash": "1c561238",
+  "browserHash": "330729e2",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "ba263de5",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "600ecd53",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "e25cd7db",
+      "needsInterop": true
+    },
+    "react-toastify": {
+      "src": "../../node_modules/react-toastify/dist/index.mjs",
+      "file": "react-toastify.js",
+      "fileHash": "f7fd509e",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "f27bd3bc",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "8391af76",
+      "needsInterop": false
+    },
+    "xlsx": {
+      "src": "../../node_modules/xlsx/xlsx.mjs",
+      "file": "xlsx.js",
+      "fileHash": "657fb201",
+      "needsInterop": false
+    },
+    "html2pdf.js": {
+      "src": "../../node_modules/html2pdf.js/dist/html2pdf.js",
+      "file": "html2pdf__js.js",
+      "fileHash": "0fdb7d51",
+      "needsInterop": true
+    },
+    "recharts": {
+      "src": "../../node_modules/recharts/es6/index.js",
+      "file": "recharts.js",
+      "fileHash": "8b7cc2a4",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "html2canvas.esm-UHKMFQL7": {
+      "file": "html2canvas__esm-UHKMFQL7.js"
+    },
+    "purify.es-WKZEQDE7": {
+      "file": "purify__es-WKZEQDE7.js"
+    },
+    "index.es-MUSSFKSA": {
+      "file": "index__es-MUSSFKSA.js"
+    },
+    "chunk-OAZZRKVC": {
+      "file": "chunk-OAZZRKVC.js"
+    },
+    "chunk-LNJWJNFR": {
+      "file": "chunk-LNJWJNFR.js"
+    },
+    "chunk-3PYRFJ6H": {
+      "file": "chunk-3PYRFJ6H.js"
+    },
+    "chunk-5NVD4PPV": {
+      "file": "chunk-5NVD4PPV.js"
+    },
+    "chunk-V4OQ3NZ2": {
+      "file": "chunk-V4OQ3NZ2.js"
+    }
+  }
+}

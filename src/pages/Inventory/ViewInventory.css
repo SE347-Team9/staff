@@ -1,0 +1,320 @@
+.view-inventory-page {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* Header */
+.view-inventory__header {
+  margin-bottom: 24px;
+}
+
+.view-inventory__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.view-inventory__back-btn:hover {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.view-inventory__header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px;
+  border-radius: 16px;
+  color: white;
+}
+
+.view-inventory__header-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-inventory__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.view-inventory__subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Content */
+.view-inventory__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Info Card */
+.view-inventory__info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.view-inventory__section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.view-inventory__info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.view-inventory__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.view-inventory__info-item--full {
+  grid-column: span 4;
+}
+
+.view-inventory__info-label {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-inventory__info-value {
+  font-size: 15px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Stock Cards */
+.view-inventory__stock-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.view-inventory__stock-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.view-inventory__stock-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.view-inventory__stock-card--primary .view-inventory__stock-icon {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.view-inventory__stock-card--warning .view-inventory__stock-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.view-inventory__stock-card--info .view-inventory__stock-icon {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.view-inventory__stock-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.view-inventory__stock-label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.view-inventory__stock-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.view-inventory__stock-unit {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Price */
+.view-inventory__price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.view-inventory__price-item {
+  text-align: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.view-inventory__price-label {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.view-inventory__price-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.view-inventory__price-value--cost {
+  color: #64748b;
+}
+
+.view-inventory__price-value--sell {
+  color: #3b82f6;
+}
+
+.view-inventory__price-value--total {
+  color: #059669;
+}
+
+/* History */
+.view-inventory__history-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.view-inventory__history-table-wrapper {
+  overflow-x: auto;
+}
+
+.view-inventory__history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.view-inventory__history-table th {
+  background: #f8fafc;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-inventory__history-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.view-inventory__date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+}
+
+.view-inventory__type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.view-inventory__type-badge--import {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.view-inventory__type-badge--export {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.view-inventory__doc-code {
+  font-family: monospace;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.view-inventory__quantity {
+  font-weight: 600;
+}
+
+.view-inventory__quantity.positive {
+  color: #059669;
+}
+
+.view-inventory__quantity.negative {
+  color: #dc2626;
+}
+
+.view-inventory__note {
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .view-inventory__info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .view-inventory__info-item--full {
+    grid-column: span 2;
+  }
+
+  .view-inventory__stock-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .view-inventory__price-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,4 +1,4 @@
-/* Create Receipt Page */
+/* Create Receipt Page - Extended for Receive Order */
 .create-receipt-page {
   min-height: calc(100vh - 80px);
   background: #f8fafc;
@@ -29,7 +29,7 @@
 }
 
 .create-receipt-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   margin: 0;
   flex: 1;
@@ -59,7 +59,7 @@
 }
 
 .form-section {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   overflow-x: visible;
 }
 
@@ -73,7 +73,7 @@
 
 .form-select {
   width: 100%;
-  max-width: 100%;
+  max-width: 320px;
   padding: 10px 14px;
   border: 1.5px solid #cbd5e1;
   border-radius: 8px;
@@ -114,8 +114,7 @@
   width: 100%;
   border-collapse: collapse;
   background: white;
-  table-layout: auto;
-  min-width: 700px;
+  min-width: 1100px;
 }
 
 .products-table thead {
@@ -126,13 +125,12 @@
 .products-table th {
   padding: 10px 12px;
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #475569;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: normal;
-  word-break: break-word;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .products-table tbody tr {
@@ -156,25 +154,32 @@
 }
 
 .col-product {
-  min-width: 180px;
-  width: 30%;
+  min-width: 200px;
 }
 
 .col-unit {
-  width: 80px;
+  width: 75px;
   text-align: center;
 }
 
+.col-warehouse {
+  width: 120px;
+}
+
 .col-quantity {
-  width: 90px;
+  width: 95px;
 }
 
 .col-price {
-  width: 100px;
+  width: 110px;
+}
+
+.col-date {
+  width: 130px;
 }
 
 .col-total {
-  width: 110px;
+  width: 120px;
 }
 
 .col-action {
@@ -183,8 +188,10 @@
 }
 
 .product-select,
+.warehouse-select,
 .quantity-input,
-.price-input {
+.price-input,
+.date-input {
   width: 100%;
   padding: 6px 10px;
   border: 1.5px solid #cbd5e1;
@@ -196,21 +203,26 @@
 }
 
 .product-select:hover,
+.warehouse-select:hover,
 .quantity-input:hover,
-.price-input:hover {
+.price-input:hover,
+.date-input:hover {
   border-color: #94a3b8;
 }
 
 .product-select:focus,
+.warehouse-select:focus,
 .quantity-input:focus,
-.price-input:focus {
+.price-input:focus,
+.date-input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   background: #f8fafc;
 }
 
-.product-select {
+.product-select,
+.warehouse-select {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -230,6 +242,10 @@
   text-align: center;
   font-weight: 600;
   border: 1.5px solid #e2e8f0;
+}
+
+.date-input {
+  cursor: pointer;
 }
 
 .total-value {
@@ -366,7 +382,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .create-receipt-page {
     padding: 16px;
   }
@@ -385,45 +401,7 @@
   }
 
   .products-table-wrapper {
-    overflow-x: auto;
-  }
-
-  .products-table {
-    width: 100%;
-    min-width: 700px;
-  }
-
-  .products-table th,
-  .products-table td {
-    padding: 10px 8px;
-    font-size: 12px;
-  }
-
-  .col-product {
-    min-width: 140px;
-  }
-
-  .col-unit {
-    width: auto;
-    min-width: 80px;
-  }
-
-  .col-quantity,
-  .col-price,
-  .col-total {
-    width: auto;
-    min-width: 90px;
-  }
-
-  .col-action {
-    width: auto;
-    min-width: 60px;
-  }
-
-  .btn-remove-item {
-    padding: 4px;
-    width: 28px;
-    height: 28px;
+    overflow-x: scroll;
   }
 
   .form-actions {

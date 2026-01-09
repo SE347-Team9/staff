@@ -8,7 +8,8 @@ import {
   BookOpen,
   Home,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Store
 } from 'lucide-react'
 import './Sidebar.css'
 
@@ -44,6 +45,18 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
       icon: Package,
       label: 'Quản lý nhập hàng',
       path: '/receive-goods'
+    },
+    {
+      id: 'receive-management',
+      icon: Package,
+      label: 'Quản lý nhận hàng',
+      path: '/receive-management'
+    },
+    {
+      id: 'warehouse',
+      icon: Store,
+      label: 'Quản lý kho',
+      path: '/warehouse-management'
     },
     {
       id: 'payment',

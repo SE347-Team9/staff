@@ -7,8 +7,10 @@ import './ReceiveGoods.css'
 interface Receipt {
   id: string
   code: string
+  supplier: string
   date: string
   total: number
+  status: 'pending' | 'approved' | 'rejected'
 }
 
 const ReceiveGoods = () => {
@@ -31,15 +33,19 @@ const ReceiveGoods = () => {
   const [receipts, setReceipts] = useState<Receipt[]>([
     {
       id: '1',
-      code: '#4',
+      code: 'PN001',
+      supplier: 'Công ty A',
       date: '4/5/2024',
-      total: 3000000
+      total: 3000000,
+      status: 'approved'
     },
     {
       id: '2',
-      code: '#3',
+      code: 'PN002',
+      supplier: 'Công ty B',
       date: '3/5/2024',
-      total: 2000000
+      total: 2000000,
+      status: 'pending'
     }
   ]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -196,42 +202,6 @@ const ReceiveGoods = () => {
         </div>
       </div>
 
-      {/* Quick Action Cards */}
-      <div className="receive-goods__quick-actions">
-        <div className="receive-goods__action-card receive-goods__action-card--blue" onClick={handleCreateReceipt}>
-          <div className="receive-goods__action-icon">
-            <Package size={32} />
-          </div>
-          <div className="receive-goods__action-content">
-            <div className="receive-goods__action-title">Tạo phiếu nhập</div>
-            <div className="receive-goods__action-subtitle">Nhập hàng mới vào kho</div>
-            <div className="receive-goods__action-cta">Nhấn để bắt đầu</div>
-          </div>
-        </div>
-
-        <div className="receive-goods__action-card receive-goods__action-card--green" onClick={handleViewInventory}>
-          <div className="receive-goods__action-icon">
-            <Package size={32} />
-          </div>
-          <div className="receive-goods__action-content">
-            <div className="receive-goods__action-title">Xem tồn kho</div>
-            <div className="receive-goods__action-subtitle">Kiểm tra số lượng hàng</div>
-            <div className="receive-goods__action-cta">7 sản phẩm</div>
-          </div>
-        </div>
-
-        <div className="receive-goods__action-card receive-goods__action-card--purple" onClick={handleViewReport} style={{ cursor: 'pointer' }}>
-          <div className="receive-goods__action-icon">
-            <Activity size={32} />
-          </div>
-          <div className="receive-goods__action-content">
-            <div className="receive-goods__action-title">Báo cáo</div>
-            <div className="receive-goods__action-subtitle">Phân tích xu hướng</div>
-            <div className="receive-goods__action-cta">Xem chi tiết</div>
-          </div>
-        </div>
-      </div>
-
       {/* Recent Receipts Section */}
       <div className="receive-goods__recent-section">
         <div className="receive-goods__section-header">
@@ -241,13 +211,13 @@ const ReceiveGoods = () => {
               <h2 className="receive-goods__section-title">Phiếu nhập gần đây</h2>
             </div>
             <div className="receive-goods__header-actions">
+              <button className="receive-goods__header-btn receive-goods__header-btn--primary" onClick={handleCreateReceipt}>
+                <Plus size={20} />
+                <span>Lập mới</span>
+              </button>
               <button className="receive-goods__header-btn receive-goods__header-btn--secondary" onClick={handleRefresh}>
                 <RefreshCw size={20} />
                 <span>Làm mới</span>
-              </button>
-              <button className="receive-goods__header-btn receive-goods__header-btn--primary" onClick={handleCreateReceipt}>
-                <Plus size={20} />
-                <span>Tạo phiếu nhập</span>
               </button>
             </div>
           </div>
@@ -269,10 +239,12 @@ const ReceiveGoods = () => {
           <table className="receive-goods__table">
             <thead>
               <tr>
-                <th>Mã phiếu</th>
-                <th>Ngày nhập</th>
-                <th>Tổng tiền</th>
-                <th>Hành động</th>
+                <th>MÃ PHIẾU NHẬP</th>
+                <th>NHÀ SX</th>
+                <th>NGÀY LẬP PHIẾU</th>
+                <th>GIÁ TỔNG</th>
+                <th>TRẠNG THÁI</th>
+                <th>THAO TÁC</th>
               </tr>
             </thead>
             <tbody>
@@ -282,10 +254,18 @@ const ReceiveGoods = () => {
                     <td>
                       <span className="receive-goods__receipt-code">{receipt.code}</span>
                     </td>
+                    <td>{receipt.supplier}</td>
                     <td>{receipt.date}</td>
                     <td>
                       <span className="receive-goods__receipt-total">
                         {formatCurrency(receipt.total)}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`receive-goods__status-badge receive-goods__status-${receipt.status}`}>
+                        {receipt.status === 'pending' && 'Chờ duyệt'}
+                        {receipt.status === 'approved' && 'Đã duyệt'}
+                        {receipt.status === 'rejected' && 'Không duyệt'}
                       </span>
                     </td>
                     <td>

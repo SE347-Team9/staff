@@ -16,6 +16,9 @@ import ExportManagement from './pages/ExportManagement/ExportManagement'
 import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import CreateReceipt from './pages/ReceiveGoods/CreateReceipt'
+import CreateReceiveOrder from './pages/ReceiveGoods/CreateReceiveOrder'
+import ReceiveManagement from './pages/ReceiveManagement/ReceiveManagement'
+import WarehouseManagement from './pages/WarehouseManagement/WarehouseManagement'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher'
 import Regulations from './pages/Regulations/Regulations'
@@ -82,6 +85,21 @@ function App() {
           <Route path="/create-receipt" element={
             <MainLayout>
               <CreateReceipt />
+            </MainLayout>
+          } />
+          <Route path="/create-receive-order" element={
+            <MainLayout>
+              <CreateReceiveOrder />
+            </MainLayout>
+          } />
+          <Route path="/receive-management" element={
+            <MainLayout>
+              <ReceiveManagement />
+            </MainLayout>
+          } />
+          <Route path="/warehouse-management" element={
+            <MainLayout>
+              <WarehouseManagement />
             </MainLayout>
           } />
           <Route path="/create-receipt-voucher" element={

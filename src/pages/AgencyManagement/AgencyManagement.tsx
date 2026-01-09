@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Eye, Edit, Search, UserPlus} from 'lucide-react'
+import { Users, Eye, Search } from 'lucide-react'
 import './AgencyManagement.css'
 
 interface Agency {
@@ -48,15 +48,6 @@ const AgencyManagement = () => {
     navigate(`/agency/view/${id}`)
   }
 
-  const handleEdit = (id: string) => {
-    console.log('Edit agency:', id)
-    navigate(`/edit-agency`)
-  }
-
-  const handleAddAgency = () => {
-    navigate('/add-agency')
-  }
-
   return (
     <div className="agency-management-page">
       {/* Header Section */}
@@ -78,7 +69,7 @@ const AgencyManagement = () => {
         </div>
       </div>
 
-      {/* Search and Add Section */}
+      {/* Search Section */}
       <div className="agency-management__actions-card">
         <div className="agency-management__search-box">
           <Search className="agency-management__search-icon" size={20} />
@@ -90,10 +81,6 @@ const AgencyManagement = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button className="agency-management__add-btn" onClick={handleAddAgency}>
-          <UserPlus size={20} />
-          <span>Thêm đại lý</span>
-        </button>
       </div>
 
       {/* Agencies Table */}
@@ -128,13 +115,6 @@ const AgencyManagement = () => {
                         title="Xem chi tiết"
                       >
                         <Eye size={18} />
-                      </button>
-                      <button
-                        className="agency-management__action-btn agency-management__action-btn--edit"
-                        onClick={() => handleEdit(agency.id)}
-                        title="Chỉnh sửa"
-                      >
-                        <Edit size={18} />
                       </button>
                     </div>
                   </td>

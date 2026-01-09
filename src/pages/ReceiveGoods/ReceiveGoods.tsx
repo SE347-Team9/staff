@@ -54,7 +54,6 @@ const ReceiveGoods = () => {
   const totalReceipts = 4
   const totalValue = 13300000
   const thisMonth = 0
-  const outOfStock = 0
 
   const filteredReceipts = receipts.filter(receipt =>
     receipt.code.toLowerCase().includes(searchTerm.toLowerCase())
@@ -183,21 +182,6 @@ const ReceiveGoods = () => {
           <div className="receive-goods__stat-badge receive-goods__stat-badge--up">
             <TrendingUp size={16} />
             <span>+15%</span>
-          </div>
-        </div>
-
-        <div className="receive-goods__stat-card receive-goods__stat-card--orange">
-          <div className="receive-goods__stat-icon">
-            <AlertTriangle size={24} />
-          </div>
-          <div className="receive-goods__stat-content">
-            <div className="receive-goods__stat-label">Hàng sắp hết</div>
-            <div className="receive-goods__stat-value">{outOfStock}</div>
-            <div className="receive-goods__stat-note">{'< 10'} sản phẩm</div>
-          </div>
-          <div className="receive-goods__stat-badge receive-goods__stat-badge--down">
-            <TrendingDown size={16} />
-            <span>-5%</span>
           </div>
         </div>
       </div>

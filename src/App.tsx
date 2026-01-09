@@ -16,8 +16,12 @@ import ExportManagement from './pages/ExportManagement/ExportManagement'
 import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import CreateReceipt from './pages/ReceiveGoods/CreateReceipt'
+import ViewReceipt from './pages/ReceiveGoods/ViewReceipt'
+import EditReceipt from './pages/ReceiveGoods/EditReceipt'
 import CreateReceiveOrder from './pages/ReceiveGoods/CreateReceiveOrder'
 import ReceiveManagement from './pages/ReceiveManagement/ReceiveManagement'
+import ViewReceiveOrder from './pages/ReceiveManagement/ViewReceiveOrder'
+import EditReceiveOrder from './pages/ReceiveManagement/EditReceiveOrder'
 import WarehouseManagement from './pages/WarehouseManagement/WarehouseManagement'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher'
@@ -87,6 +91,16 @@ function App() {
               <CreateReceipt />
             </MainLayout>
           } />
+          <Route path="/import/view/:id" element={
+            <MainLayout>
+              <ViewReceipt />
+            </MainLayout>
+          } />
+          <Route path="/import/edit/:id" element={
+            <MainLayout>
+              <EditReceipt />
+            </MainLayout>
+          } />
           <Route path="/create-receive-order" element={
             <MainLayout>
               <CreateReceiveOrder />
@@ -95,6 +109,16 @@ function App() {
           <Route path="/receive-management" element={
             <MainLayout>
               <ReceiveManagement />
+            </MainLayout>
+          } />
+          <Route path="/receive-order/view/:id" element={
+            <MainLayout>
+              <ViewReceiveOrder />
+            </MainLayout>
+          } />
+          <Route path="/receive-order/edit/:id" element={
+            <MainLayout>
+              <EditReceiveOrder />
             </MainLayout>
           } />
           <Route path="/warehouse-management" element={

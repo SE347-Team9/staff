@@ -29,6 +29,9 @@ const WarehouseManagement = () => {
   const [showBatchModal, setShowBatchModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterWarehouse, setFilterWarehouse] = useState<string>('all')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
 
   // Mock data
   const [products] = useState<Product[]>([
@@ -85,8 +88,17 @@ const WarehouseManagement = () => {
 
   const totalProducts = products.length
   const totalQuantity = products.reduce((sum, p) => sum + p.totalQuantity, 0)
-  const totalValue = products.reduce((sum, p) => sum + (p.totalQuantity * 50000), 0) // Giá giả định
+  const outOfStockProducts = products.filter(p => p.status === 'out').length
+  const lowStockProducts = products.filter(p => p.status === 'low').length
   const expiredProducts = products.filter(p => p.status === 'expired').length
+
+  // Filter products based on search, warehouse and status
+  const filteredProducts = products.filter(product => {
+    const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchWarehouse = filterWarehouse === 'all' || product.warehouseType === filterWarehouse
+    const matchStatus = filterStatus === 'all' || product.status === filterStatus
+    return matchSearch && matchWarehouse && matchStatus
+  })
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -176,14 +188,14 @@ const WarehouseManagement = () => {
           </div>
         </div>
 
-        <div className="warehouse-management__stat-card warehouse-management__stat-card--green">
+        <div className="warehouse-management__stat-card warehouse-management__stat-card--red">
           <div className="warehouse-management__stat-icon">
-            <span className="warehouse-management__currency-icon">₫</span>
+            <AlertTriangle size={24} />
           </div>
           <div className="warehouse-management__stat-content">
-            <div className="warehouse-management__stat-label">Giá trị tồn kho</div>
-            <div className="warehouse-management__stat-value">{(totalValue / 1000000).toFixed(1)}M</div>
-            <div className="warehouse-management__stat-unit">VND</div>
+            <div className="warehouse-management__stat-label">Hàng đã hết</div>
+            <div className="warehouse-management__stat-value">{outOfStockProducts}</div>
+            <div className="warehouse-management__stat-unit">sản phẩm</div>
           </div>
           <div className="warehouse-management__stat-badge">
             <TrendingUp size={16} />
@@ -191,6 +203,20 @@ const WarehouseManagement = () => {
         </div>
 
         <div className="warehouse-management__stat-card warehouse-management__stat-card--orange">
+          <div className="warehouse-management__stat-icon">
+            <AlertTriangle size={24} />
+          </div>
+          <div className="warehouse-management__stat-content">
+            <div className="warehouse-management__stat-label">Hàng sắp hết</div>
+            <div className="warehouse-management__stat-value">{lowStockProducts}</div>
+            <div className="warehouse-management__stat-unit">sản phẩm</div>
+          </div>
+          <div className="warehouse-management__stat-badge">
+            <TrendingUp size={16} />
+          </div>
+        </div>
+
+        <div className="warehouse-management__stat-card warehouse-management__stat-card--purple">
           <div className="warehouse-management__stat-icon">
             <AlertTriangle size={24} />
           </div>
@@ -215,6 +241,42 @@ const WarehouseManagement = () => {
           <p className="warehouse-management__section-subtitle">Quản lý và theo dõi tồn kho sản phẩm</p>
         </div>
 
+        {/* Filter Controls */}
+        <div className="warehouse-management__filters">
+          <div className="warehouse-management__search-box">
+            <input
+              type="text"
+              className="warehouse-management__search-input"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="warehouse-management__filter-group">
+            <select
+              className="warehouse-management__filter-select"
+              value={filterWarehouse}
+              onChange={(e) => setFilterWarehouse(e.target.value)}
+            >
+              <option value="all">Tất cả loại kho</option>
+              <option value="Kho thường">Kho thường</option>
+              <option value="Kho mát">Kho mát</option>
+              <option value="Kho đông lạnh">Kho đông lạnh</option>
+            </select>
+            <select
+              className="warehouse-management__filter-select"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="normal">Bình thường</option>
+              <option value="low">Sắp hết hàng</option>
+              <option value="out">Hết hàng</option>
+              <option value="expired">Sắp hết hạn</option>
+            </select>
+          </div>
+        </div>
+
         <div className="warehouse-management__table-wrapper">
           <table className="warehouse-management__table">
             <thead>
@@ -228,7 +290,7 @@ const WarehouseManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td>
                     <span className="warehouse-management__product-name">{product.name}</span>

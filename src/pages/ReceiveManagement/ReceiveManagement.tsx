@@ -48,11 +48,11 @@ const ReceiveManagement = () => {
   )
 
   const handleView = (id: string) => {
-    navigate(`/receive-management/view/${id}`)
+    navigate(`/receive-order/view/${id}`)
   }
 
   const handleEdit = (id: string) => {
-    navigate(`/receive-management/edit/${id}`)
+    navigate(`/receive-order/edit/${id}`)
   }
 
   const handleDelete = (ticket: ReceiveTicket) => {

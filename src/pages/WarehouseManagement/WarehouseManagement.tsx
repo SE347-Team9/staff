@@ -17,6 +17,7 @@ interface Product {
   id: string
   name: string
   totalQuantity: number
+  threshold: number
   unit: string
   warehouseType: string
   status: 'normal' | 'low' | 'out' | 'expired'
@@ -39,6 +40,7 @@ const WarehouseManagement = () => {
       id: '1',
       name: 'Bia Hà Nội',
       totalQuantity: 2000,
+      threshold: 1500,
       unit: 'Thùng',
       warehouseType: 'Kho thường',
       status: 'normal',
@@ -51,11 +53,12 @@ const WarehouseManagement = () => {
       id: '2',
       name: 'Gạo ST25',
       totalQuantity: 200,
+      threshold: 300,
       unit: 'Kg',
       warehouseType: 'Kho mát',
       status: 'low',
       batches: [
-        { id: '3', batchCode: 'LO-20260201', mfgDate: '01/02/2026', expDate: '01/02/2027', quantity: 120, status: 'Xuất trước' },
+        { id: '3', batchCode: 'LO-20260201', mfgDate: '01/02/2026', expDate: '01/02/2027', quantity: 120, status: 'Sắp hết hạn' },
         { id: '4', batchCode: 'LO-20260301', mfgDate: '01/03/2026', expDate: '01/03/2027', quantity: 80, status: 'Bình thường' }
       ]
     },
@@ -63,6 +66,7 @@ const WarehouseManagement = () => {
       id: '3',
       name: 'Sữa Vinamilk',
       totalQuantity: 0,
+      threshold: 500,
       unit: 'Lốc',
       warehouseType: 'Kho đông lạnh',
       status: 'out',
@@ -75,12 +79,13 @@ const WarehouseManagement = () => {
       id: '4',
       name: 'Nước ngọt Coca',
       totalQuantity: 2300,
+      threshold: 2000,
       unit: 'Chai',
       warehouseType: 'Kho thường',
       status: 'expired',
       batches: [
         { id: '7', batchCode: 'LO-20250101', mfgDate: '01/01/2025', expDate: '01/01/2026', quantity: 300, status: 'Sắp hết hạn' },
-        { id: '8', batchCode: 'LO-20250301', mfgDate: '01/03/2025', expDate: '01/03/2026', quantity: 1000, status: 'Xuất trước' },
+        { id: '8', batchCode: 'LO-20250301', mfgDate: '01/03/2025', expDate: '01/03/2026', quantity: 1000, status: 'Sắp hết hạn' },
         { id: '9', batchCode: 'LO-20250401', mfgDate: '01/04/2025', expDate: '01/04/2026', quantity: 1000, status: 'Bình thường' }
       ]
     }
@@ -97,7 +102,8 @@ const WarehouseManagement = () => {
     const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchWarehouse = filterWarehouse === 'all' || product.warehouseType === filterWarehouse
     const matchStatus = filterStatus === 'all' || product.status === filterStatus
-    return matchSearch && matchWarehouse && matchStatus
+    const excludeExpired = product.status !== 'expired'
+    return matchSearch && matchWarehouse && matchStatus && excludeExpired
   })
 
   const getStatusColor = (status: string) => {
@@ -118,7 +124,7 @@ const WarehouseManagement = () => {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'normal':
-        return 'Bình thường'
+        return 'Còn hàng'
       case 'low':
         return 'Sắp hết hàng'
       case 'out':
@@ -272,7 +278,6 @@ const WarehouseManagement = () => {
               <option value="normal">Bình thường</option>
               <option value="low">Sắp hết hàng</option>
               <option value="out">Hết hàng</option>
-              <option value="expired">Sắp hết hạn</option>
             </select>
           </div>
         </div>
@@ -283,6 +288,7 @@ const WarehouseManagement = () => {
               <tr>
                 <th>SẢN PHẨM</th>
                 <th>TỔNG TỒN</th>
+                <th>ĐỊNH MỨC</th>
                 <th>ĐƠN VỊ</th>
                 <th>LOẠI KHO</th>
                 <th>TRẠNG THÁI</th>
@@ -297,6 +303,9 @@ const WarehouseManagement = () => {
                   </td>
                   <td>
                     <span className="warehouse-management__quantity">{product.totalQuantity.toLocaleString('vi-VN')}</span>
+                  </td>
+                  <td>
+                    <span className="warehouse-management__threshold">{product.threshold.toLocaleString('vi-VN')}</span>
                   </td>
                   <td>{product.unit}</td>
                   <td>{product.warehouseType}</td>

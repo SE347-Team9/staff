@@ -348,6 +348,12 @@
   font-size: 14px;
 }
 
+.warehouse-management__threshold {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 13px;
+}
+
 .warehouse-management__status {
   display: inline-block;
   padding: 6px 12px;

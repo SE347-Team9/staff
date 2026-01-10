@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Truck, Search, AlertCircle, Eye, Edit, Trash2, List } from 'lucide-react'
 
 import { toast } from 'react-toastify';
@@ -16,6 +16,7 @@ interface Export {
 
 const ExportManagement = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAgency, setSelectedAgency] = useState('all')
   const [startDate, setStartDate] = useState('')
@@ -86,34 +87,20 @@ const ExportManagement = () => {
     }
   ]
 
-  const defaultExports: Export[] = [
-    {
-      id: '1',
-      code: 'DH002',
-      agency: 'Đại lý Đại',
-      date: '05-11-2024',
-      total: 900000,
-      status: 'approved'
-    },
-    {
-      id: '2',
-      code: 'DH001',
-      agency: 'Đại lý Nghĩa',
-      date: '05-10-2024',
-      total: 1530000,
-      status: 'approved'
-    }
-  ]
+  const defaultExports: Export[] = []
 
   const [exports, setExports] = useState<Export[]>(defaultExports);
 
-  useEffect(() => {
+  const loadExports = () => {
     const saved = localStorage.getItem('customExports')
+    console.log('Loading exports from localStorage:', saved)
     if (saved) {
       try {
         const parsed: Export[] = JSON.parse(saved)
+        console.log('Parsed exports:', parsed)
         if (Array.isArray(parsed)) {
-          setExports(parsed.length ? parsed : defaultExports)
+          console.log('Setting exports state:', parsed)
+          setExports(parsed)
         } else {
           setExports(defaultExports)
         }
@@ -121,13 +108,52 @@ const ExportManagement = () => {
         console.error('Failed to parse saved exports', e)
         setExports(defaultExports)
       }
+    } else {
+      console.log('No exports in localStorage, setting to empty')
+      setExports(defaultExports)
     }
+  }
+
+  // Load exports when location changes (including pathname)
+  useEffect(() => {
+    console.log('Location pathname changed to:', location.pathname)
+    if (location.pathname === '/export-management') {
+      console.log('Loading exports due to pathname change')
+      loadExports()
+    }
+  }, [location.pathname])
+
+  // Also load on component mount
+  useEffect(() => {
+    console.log('ExportManagement component mounted, loading exports')
+    loadExports()
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('customExports', JSON.stringify(exports))
-  }, [exports])
+    const handleFocus = () => {
+      console.log('Window focused, reloading exports')
+      loadExports()
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [])
 
+
+  useEffect(() => {
+    const handleExportsUpdated = (event: any) => {
+      console.log('Custom event exportsUpdated received:', event.detail)
+      if (event.detail && event.detail.exports) {
+        setExports(event.detail.exports)
+      } else {
+        loadExports()
+      }
+    }
+    window.addEventListener('exportsUpdated', handleExportsUpdated)
+    return () => window.removeEventListener('exportsUpdated', handleExportsUpdated)
+  }, [])
+
+  // Do NOT persist exports back to localStorage here to avoid overwriting
+  // newly created records from CreateExport during initial render.
   const totalExports = exports.length
   const totalAmount = exports.reduce((sum, exp) => sum + exp.total, 0)
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { DollarSign, Search, Edit, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import './PaymentManagement.css'
 
 interface Payment {
@@ -16,36 +16,23 @@ interface Payment {
 const PaymentManagement = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
 
   // Mock data
-  const defaultPayments: Payment[] = [
-    {
-      id: '1',
-      code: 'HD002',
-      date: '2024-11-05',
-      agency: 'Đại lý Đại',
-      amount: 300000,
-      status: 'paid'
-    },
-    {
-      id: '2',
-      code: 'HD001',
-      date: '2024-10-05',
-      agency: 'Đại lý Nghĩa',
-      amount: 500000,
-      status: 'paid'
-    }
-  ]
+  const defaultPayments: Payment[] = []
 
   const [payments, setPayments] = useState<Payment[]>(defaultPayments)
 
-  useEffect(() => {
+  const loadPayments = () => {
     const saved = localStorage.getItem('customPayments')
+    console.log('Loading payments from localStorage:', saved)
     if (saved) {
       try {
         const parsed: Payment[] = JSON.parse(saved)
+        console.log('Parsed payments:', parsed)
         if (Array.isArray(parsed)) {
-          setPayments(parsed.length ? parsed : defaultPayments)
+          console.log('Setting payments state:', parsed)
+          setPayments(parsed)
         } else {
           setPayments(defaultPayments)
         }
@@ -53,12 +40,53 @@ const PaymentManagement = () => {
         console.error('Failed to parse payments', e)
         setPayments(defaultPayments)
       }
+    } else {
+      console.log('No payments in localStorage, setting to empty')
+      setPayments(defaultPayments)
     }
+  }
+
+  // Load payments when location changes (including pathname)
+  useEffect(() => {
+    console.log('Location pathname changed to:', location.pathname)
+    if (location.pathname === '/payment-management') {
+      console.log('Loading payments due to pathname change')
+      loadPayments()
+    }
+  }, [location.pathname])
+
+  // Also load on component mount
+  useEffect(() => {
+    console.log('PaymentManagement component mounted, loading payments')
+    loadPayments()
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('customPayments', JSON.stringify(payments))
-  }, [payments])
+    const handleFocus = () => {
+      console.log('Window focused, reloading payments')
+      loadPayments()
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+
+  }, [])
+
+  // Listen for custom event to update payments immediately after creation
+  useEffect(() => {
+    const handlePaymentsUpdated = (event: any) => {
+      console.log('Custom event paymentsUpdated received:', event.detail)
+      if (event.detail && event.detail.payments) {
+        setPayments(event.detail.payments)
+      } else {
+        loadPayments()
+      }
+    }
+    window.addEventListener('paymentsUpdated', handlePaymentsUpdated)
+    return () => window.removeEventListener('paymentsUpdated', handlePaymentsUpdated)
+  }, [])
+
+  // Do NOT persist payments back to localStorage here to avoid overwriting
+  // newly created records from CreateExport during initial render.
 
   const totalPayments = payments.length
   const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0)

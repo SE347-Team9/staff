@@ -58,10 +58,39 @@ const CreateExport = () => {
 
   const handleSubmit = () => {
     // Validate form
-    if (!exportCode || !agency || items.some(item => !item.product)) {
-      alert('Vui lòng điền đầy đủ thông tin')
+    console.log('=== FORM SUBMISSION ===')
+    console.log('Agency:', agency)
+    console.log('Items count:', items.length)
+    console.log('Items details:', items.map((item, idx) => ({
+      index: idx,
+      product: item.product,
+      quantity: item.quantity,
+      price: item.price,
+      total: item.total
+    })))
+    
+    if (!agency) {
+      console.log('VALIDATION FAIL: No agency selected')
+      alert('Vui lòng chọn đại lý')
       return
     }
+    
+    if (items.length === 0) {
+      console.log('VALIDATION FAIL: No items')
+      alert('Vui lòng thêm ít nhất một sản phẩm')
+      return
+    }
+    
+    const itemsWithoutProduct = items.filter(item => !item.product)
+    console.log('Items without product:', itemsWithoutProduct)
+    if (itemsWithoutProduct.length > 0) {
+      const failIndex = items.findIndex(item => !item.product)
+      console.log('VALIDATION FAIL: Item at index', failIndex, 'has no product')
+      alert(`Vui lòng chọn sản phẩm cho tất cả các dòng. Dòng ${failIndex + 1} chưa có sản phẩm`)
+      return
+    }
+    
+    console.log('VALIDATION PASS')
 
     const exportData = {
       code: exportCode,
@@ -84,7 +113,13 @@ const CreateExport = () => {
       total: calculateTotal(),
       status: 'pending'
     }
-    localStorage.setItem('customExports', JSON.stringify([...parsed, newExport]))
+    const updatedExports = [...parsed, newExport]
+    console.log('=== SAVING EXPORTS ===')
+    console.log('Updated exports:', updatedExports)
+    console.log('Stringified:', JSON.stringify(updatedExports))
+    localStorage.setItem('customExports', JSON.stringify(updatedExports))
+    console.log('After setItem, reading from localStorage:', localStorage.getItem('customExports'))
+    console.log('Saved exports to localStorage:', updatedExports)
 
     // Tạo hóa đơn (phiếu thu) tương ứng
     try {
@@ -99,19 +134,33 @@ const CreateExport = () => {
         amount: calculateTotal(),
         status: 'pending'
       }
-      localStorage.setItem('customPayments', JSON.stringify([...paymentsList, newPayment]))
+      const updatedPayments = [...paymentsList, newPayment]
+      console.log('=== SAVING PAYMENTS ===')
+      console.log('Updated payments:', updatedPayments)
+      console.log('Stringified:', JSON.stringify(updatedPayments))
+      localStorage.setItem('customPayments', JSON.stringify(updatedPayments))
+      console.log('After setItem, reading from localStorage:', localStorage.getItem('customPayments'))
+      console.log('Saved payments to localStorage:', updatedPayments)
+      // Dispatch custom event để notify PaymentManagement
+      window.dispatchEvent(new CustomEvent('paymentsUpdated', { detail: { payments: updatedPayments } }))
     } catch (err) {
       console.error('Không thể tạo phiếu thu từ phiếu xuất', err)
     }
 
+    console.log('=== NAVIGATING ===')
     alert('Tạo phiếu xuất thành công!')
-    navigate('/export-management')
-  }
+    
+    // Dispatch custom event để notify ExportManagement
+    window.dispatchEvent(new CustomEvent('exportsUpdated', { detail: { exports: updatedExports } }))
+    
+    setTimeout(() => {
+      navigate('/export-management')
+    }, 50)
 
+  }
   const handleCancel = () => {
     navigate('/export-management')
   }
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫'
   }

@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import { FileText, ArrowLeft, CheckCircle, Plus, Trash2 } from 'lucide-react';
+import { FileText, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import './EditExport.css';
 import { useState } from 'react';
 
@@ -12,8 +12,8 @@ const initialData = {
   statusLabel: 'Đã giao hàng',
   note: 'Xác nhận nhận hàng bởi agency',
   items: [
-    { name: 'Nước ngọt Pepsi', unit: 'Lon', quantity: 80, price: 9000 },
-    { name: 'Sữa Vinamilk', unit: 'Lốc', quantity: 3, price: 60000 },
+    { name: 'Nước ngọt Pepsi', unit: 'Lon', quantity: 80, batch: 'LO-20260110', price: 9000 },
+    { name: 'Sữa Vinamilk', unit: 'Lốc', quantity: 3, batch: 'LO-20260110', price: 60000 },
   ],
 };
 
@@ -23,7 +23,6 @@ const EditExport = () => {
   const navigate = useNavigate();
   const [agency, setAgency] = useState(initialData.agency);
   const [date, setDate] = useState(initialData.date);
-  const [note, setNote] = useState(initialData.note);
   const [items, setItems] = useState(initialData.items);
 
   const handleItemChange = (idx: number, field: string, value: string | number) => {
@@ -35,7 +34,12 @@ const EditExport = () => {
   };
 
   const handleAddItem = () => {
-    setItems(items => [...items, { name: '', unit: '', quantity: 1, price: 0 }]);
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const batchCode = `LO-${year}${month}${day}`
+    setItems(items => [...items, { name: '', unit: '', quantity: 1, batch: batchCode, price: 0 }]);
   };
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
@@ -65,7 +69,7 @@ const EditExport = () => {
                 <input className="edit-export-input" value={agency} onChange={e => setAgency(e.target.value)} />
               </div>
               <div>
-                <label className="edit-export-label">Ngày xuất hàng</label>
+                <label className="edit-export-label">Ngày lập phiếu</label>
                 <input className="edit-export-input" type="date" value={date} onChange={e => setDate(e.target.value)} />
               </div>
             </div>
@@ -83,6 +87,7 @@ const EditExport = () => {
                     <th>Mặt hàng</th>
                     <th>Đơn vị tính</th>
                     <th>Số lượng</th>
+                    <th>Lô hàng</th>
                     <th>Đơn giá</th>
                     <th>Thành tiền</th>
                     <th>Xóa</th>
@@ -122,6 +127,14 @@ const EditExport = () => {
                       <td>
                         <input
                           className="edit-export-table-input"
+                          value={item.batch}
+                          onChange={e => handleItemChange(idx, 'batch', e.target.value)}
+                          placeholder="Mã lô"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className="edit-export-table-input"
                           type="number"
                           min={0}
                           value={item.price}
@@ -144,30 +157,18 @@ const EditExport = () => {
               </table>
             </div>
           </div>
-        </div>
-        <div className="edit-export-main-right">
-          <div className="edit-export-status-card">
-            <div className="edit-export-status-label">Trạng thái phiếu</div>
-            <div className="edit-export-status-badge edit-export-status-badge--delivered">
-              <CheckCircle size={18} /> {initialData.statusLabel}
+
+          {/* Summary and Actions */}
+          <div className="edit-export-summary-section">
+            <div className="edit-export-total-row">
+              <span className="edit-export-total-label">Tổng tiền</span>
+              <span className="edit-export-total-value">{total.toLocaleString('vi-VN')} ₫</span>
             </div>
-            <div className="edit-export-note-label">Ghi chú</div>
-            <textarea
-              className="edit-export-note-input"
-              value={note}
-              onChange={e => setNote(e.target.value)}
-            />
           </div>
-          <div className="edit-export-total-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontWeight: 700 }}>Tổng cộng</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span className="edit-export-total" style={{ fontSize: '2rem', fontWeight: 900 }}>{total.toLocaleString('vi-VN')}</span>
-              <span style={{ fontWeight: 700, fontSize: '1.3rem' }}>VND</span>
-            </span>
-          </div>
-          <div className="edit-export-actions">
-            <button className="edit-export-btn edit-export-btn--secondary" onClick={() => navigate('/export-management')}>Hủy</button>
-            <button className="edit-export-btn edit-export-btn--primary">Lưu thay đổi</button>
+
+          <div className="edit-export-form-actions">
+            <button className="edit-export-btn edit-export-btn--cancel" onClick={() => navigate('/export-management')}>Hủy bỏ</button>
+            <button className="edit-export-btn edit-export-btn--save">Lưu thay đổi</button>
           </div>
         </div>
       </div>

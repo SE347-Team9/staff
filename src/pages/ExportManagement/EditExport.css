@@ -5,6 +5,82 @@
 .edit-export-table-textarea {
   resize: none;
 }
+
+/* Summary Section */
+.edit-export-summary-section {
+  background: #eff6ff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-top: 24px;
+  border: 2px solid #3b82f6;
+}
+
+.edit-export-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.edit-export-total-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e40af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-export-total-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1e40af;
+}
+
+/* Form Actions */
+.edit-export-form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.edit-export-btn--cancel {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #d1d5db;
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-export-btn--cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.edit-export-btn--save {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.edit-export-btn--save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
 .edit-export-wrapper {
   min-height: 100vh;
   background: linear-gradient(135deg, #eaf6ff 0%, #dbeafe 100%);

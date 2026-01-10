@@ -8,6 +8,7 @@ interface ExportItem {
   product: string
   unit: string
   quantity: number
+  batch: string
   price: number
   total: number
 }
@@ -29,7 +30,7 @@ const CreateExport = () => {
   const [agency, setAgency] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [items, setItems] = useState<ExportItem[]>([
-    { id: 1, product: '', unit: '', quantity: 0, price: 0, total: 0 }
+    { id: 1, product: '', unit: '', quantity: 0, batch: '', price: 0, total: 0 }
   ])
 
   const calculateTotal = () => {
@@ -45,6 +46,14 @@ const CreateExport = () => {
           if (info) {
             updatedItem.unit = info.unit
             updatedItem.price = info.price
+          }
+          // Auto-generate batch code when product is selected
+          if (value) {
+            const today = new Date()
+            const year = today.getFullYear()
+            const month = String(today.getMonth() + 1).padStart(2, '0')
+            const day = String(today.getDate()).padStart(2, '0')
+            updatedItem.batch = `LO-${year}${month}${day}`
           }
         }
         if (field === 'quantity' || field === 'price' || field === 'product') {
@@ -183,6 +192,13 @@ const CreateExport = () => {
       setAgency(requestData.agency || '')
       setDate(convertDateToInput(requestData.date))
       if (Array.isArray(requestData.items)) {
+        // Generate batch code based on current date
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = String(today.getMonth() + 1).padStart(2, '0')
+        const day = String(today.getDate()).padStart(2, '0')
+        const batchCode = `LO-${year}${month}${day}`
+        
         const mappedItems = requestData.items.map((item: any, idx: number) => {
           const info = productInfo[item.name] || { unit: item.unit || 'Đơn vị', price: item.price || 0 }
           const quantity = item.requested || 0
@@ -192,6 +208,7 @@ const CreateExport = () => {
             product: item.name || '',
             unit: info.unit,
             quantity,
+            batch: batchCode,
             price,
             total: quantity * price
           }
@@ -270,6 +287,7 @@ const CreateExport = () => {
                     <th className="col-product">SẢN PHẨM</th>
                     <th className="col-unit">ĐƠN VỊ TÍNH</th>
                     <th className="col-quantity">SỐ LƯỢNG</th>
+                    <th className="col-batch">LÔ HÀNG</th>
                     <th className="col-price">ĐON GIÁ</th>
                     <th className="col-total">THÀNH TIỀN</th>
                   </tr>
@@ -309,6 +327,15 @@ const CreateExport = () => {
                           value={item.quantity || ''}
                           onChange={(e) => handleItemChange(item.id, 'quantity', Number(e.target.value))}
                           min="0"
+                        />
+                      </td>
+                      <td className="col-batch">
+                        <input
+                          type="text"
+                          className="table-input"
+                          value={item.batch}
+                          onChange={(e) => handleItemChange(item.id, 'batch', e.target.value)}
+                          placeholder="Mã lô"
                         />
                       </td>
                       <td className="col-price">

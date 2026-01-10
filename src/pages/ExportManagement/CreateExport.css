@@ -190,11 +190,11 @@
 }
 
 .col-stt {
-  width: 60px;
+  width: 45px;
   text-align: center;
   font-weight: 700;
   color: #3b82f6;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .col-product {
@@ -206,6 +206,7 @@
 }
 
 .col-quantity,
+.col-batch,
 .col-price {
   width: 110px;
 }

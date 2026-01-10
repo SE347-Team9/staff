@@ -11,7 +11,6 @@ import Reports from './pages/Report/Reports'
 import AddReport from './pages/Report/AddReport'
 import ViewReport from './pages/Report/ViewReport'
 import AgencyManagement from './pages/AgencyManagement/AgencyManagement'
-import AddAgency from './pages/AgencyManagement/AddAgency'
 import ExportManagement from './pages/ExportManagement/ExportManagement'
 import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
@@ -42,11 +41,6 @@ function App() {
           <Route path="/agency-management" element={
             <MainLayout>
               <AgencyManagement />
-            </MainLayout>
-          } />
-          <Route path="/add-agency" element={
-            <MainLayout>
-              <AddAgency />
             </MainLayout>
           } />
           <Route path="/agency/view/:id" element={

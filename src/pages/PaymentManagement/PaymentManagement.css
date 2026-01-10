@@ -298,19 +298,16 @@
   font-size: 16px;
 }
 
-.payment-management__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
+.payment-status-select {
+  width: 160px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #dfe7f5;
+  background: #ffffff;
+  color: #111827;
   font-weight: 600;
-}
-
-.payment-management__status--paid {
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  color: #065f46;
+  font-size: 13px;
+  outline: none;
 }
 
 .payment-management__action-buttons {

@@ -29,16 +29,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
       path: '/home'
     },
     {
+      id: 'regulations',
+      icon: BookOpen,
+      label: 'Quản lý quy định',
+      path: '/regulations'
+    },
+    {
       id: 'agency',
       icon: Building2,
       label: 'Quản lý đại lý',
       path: '/agency-management'
-    },
-    {
-      id: 'export',
-      icon: RefreshCw,
-      label: 'Quản lý xuất hàng',
-      path: '/export-management'
     },
     {
       id: 'receive',
@@ -59,6 +59,12 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
       path: '/warehouse-management'
     },
     {
+      id: 'export',
+      icon: RefreshCw,
+      label: 'Quản lý xuất hàng',
+      path: '/export-management'
+    },
+    {
       id: 'payment',
       icon: CreditCard,
       label: 'Quản lý thanh toán',
@@ -69,12 +75,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }: SidebarProps) => {
       icon: BarChart3,
       label: 'Lập báo cáo',
       path: '/reports'
-    },
-    {
-      id: 'regulations',
-      icon: BookOpen,
-      label: 'Quản lý quy định',
-      path: '/regulations'
     }
   ]
 

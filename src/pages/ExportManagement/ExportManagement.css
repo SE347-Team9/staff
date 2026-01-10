@@ -422,7 +422,7 @@
 }
 
 .col-status {
-  width: 180px;
+  width: 170px;
 }
 
 .col-actions {
@@ -455,28 +455,22 @@
 }
 
 /* Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 13px;
+.status-select {
+  width: 140px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #dfe7f5;
+  background: #ffffff;
+  color: #111827;
   font-weight: 600;
-  text-align: center;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.status-delivered {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-cancelled {
-  background: #fee2e2;
-  color: #991b1b;
+.status-select:focus {
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 
 /* Action Buttons */
@@ -592,6 +586,15 @@
   font-weight: 700;
 }
 
+.status-insufficient {
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .inventory-items {
   margin-bottom: 10px;
 }
@@ -604,6 +607,14 @@
   border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
   color: #22223b;
+}
+
+.inventory-item.insufficient {
+  background: #fef2f2;
+  padding: 8px;
+  border-radius: 6px;
+  border-bottom: none;
+  margin-bottom: 8px;
 }
 
 .inventory-item:last-child {
@@ -632,6 +643,10 @@
   font-size: 13px;
 }
 
+.item-status.error {
+  color: #dc2626;
+}
+
 .inventory-summary {
   margin: 10px 0 14px 0;
   font-size: 14px;
@@ -648,6 +663,11 @@
 
 .summary-result {
   color: #059669;
+}
+
+.summary-result.error-text {
+  color: #dc2626;
+}
   font-weight: 600;
 }
 

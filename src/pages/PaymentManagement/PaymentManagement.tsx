@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
-import { DollarSign, Plus, Search, Edit, Trash2, CheckCircle } from 'lucide-react'
+import { DollarSign, Search, Edit, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import './PaymentManagement.css'
 
@@ -18,27 +18,50 @@ const PaymentManagement = () => {
   const navigate = useNavigate()
 
   // Mock data
-  const [payments, setPayments] = useState<Payment[]>([
+  const defaultPayments: Payment[] = [
     {
       id: '1',
-      code: '2',
-      date: '2024-05-16',
+      code: 'HD002',
+      date: '2024-11-05',
       agency: 'Đại lý Đại',
       amount: 300000,
       status: 'paid'
     },
     {
       id: '2',
-      code: '1',
-      date: '2024-05-15',
+      code: 'HD001',
+      date: '2024-10-05',
       agency: 'Đại lý Nghĩa',
       amount: 500000,
       status: 'paid'
     }
-  ]);
+  ]
 
-  const totalPayments = 2
-  const totalAmount = 800000
+  const [payments, setPayments] = useState<Payment[]>(defaultPayments)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('customPayments')
+    if (saved) {
+      try {
+        const parsed: Payment[] = JSON.parse(saved)
+        if (Array.isArray(parsed)) {
+          setPayments(parsed.length ? parsed : defaultPayments)
+        } else {
+          setPayments(defaultPayments)
+        }
+      } catch (e) {
+        console.error('Failed to parse payments', e)
+        setPayments(defaultPayments)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('customPayments', JSON.stringify(payments))
+  }, [payments])
+
+  const totalPayments = payments.length
+  const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0)
 
   const filteredPayments = payments.filter(payment =>
     payment.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -79,8 +102,14 @@ const PaymentManagement = () => {
     setDeletePayment(null);
   };
 
-  const handleAddPayment = () => {
-    navigate('/create-receipt-voucher');
+  const formatDateDisplay = (isoOrYmd: string) => {
+    // Accept 'yyyy-mm-dd' and return 'dd-mm-yyyy'
+    const parts = isoOrYmd.split('-')
+    if (parts.length === 3) {
+      const [year, month, day] = parts
+      return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
+    }
+    return isoOrYmd
   }
 
   return (
@@ -93,12 +122,7 @@ const PaymentManagement = () => {
         <div className="payment-management__header-text">
           <h1 className="payment-management__title">Phiếu Thu Của Tôi</h1>
         </div>
-        <div className="payment-management__header-actions">
-          <button className="payment-management__header-btn payment-management__header-btn--primary" onClick={handleAddPayment}>
-            <Plus size={20} />
-            <span>Thêm phiếu thu</span>
-          </button>
-        </div>
+        <div className="payment-management__header-actions"></div>
       </div>
 
       {/* Statistics Cards */}
@@ -164,7 +188,7 @@ const PaymentManagement = () => {
                         <span>{payment.code}</span>
                       </div>
                     </td>
-                    <td>{payment.date}</td>
+                    <td>{formatDateDisplay(payment.date)}</td>
                     <td>
                       <div className="payment-management__agency-name">
                         {payment.agency}
@@ -176,10 +200,14 @@ const PaymentManagement = () => {
                       </span>
                     </td>
                     <td>
-                      <span className={`payment-management__status payment-management__status--${payment.status}`}>
-                        <CheckCircle size={16} />
-                        <span>Đã thanh toán</span>
-                      </span>
+                      <select
+                        className="payment-status-select"
+                        value={payment.status}
+                        onChange={(e) => setPayments(prev => prev.map(p => p.id === payment.id ? { ...p, status: e.target.value as 'paid' | 'pending' } : p))}
+                      >
+                        <option value="paid">Đã thanh toán</option>
+                        <option value="pending">Chưa thanh toán</option>
+                      </select>
                     </td>
                     <td>
                       <div className="payment-management__action-buttons">

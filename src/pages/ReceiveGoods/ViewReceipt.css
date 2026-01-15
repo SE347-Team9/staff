@@ -40,7 +40,7 @@
   margin: 0;
 }
 
-.btn-back {
+.view-receipt-page .btn-back {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -55,13 +55,13 @@
   transition: all 0.2s;
 }
 
-.btn-back:hover {
+.view-receipt-page .btn-back:hover {
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
   transform: translateY(-1px);
 }
 
 /* Content */
-.view-receipt-content {
+.view-receipt-page .view-receipt-content {
   background: white;
   border-radius: 20px;
   padding: 24px;
@@ -69,7 +69,7 @@
 }
 
 /* Info Section */
-.info-section {
+.view-receipt-page .info-section {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 16px;
   padding: 20px;
@@ -77,7 +77,7 @@
   border: 1px solid #e2e8f0;
 }
 
-.info-row {
+.view-receipt-page .info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,53 +85,53 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.info-row:last-child {
+.view-receipt-page .info-row:last-child {
   border-bottom: none;
 }
 
-.info-label {
+.view-receipt-page .info-label {
   font-size: 14px;
   font-weight: 600;
   color: #64748b;
 }
 
-.info-value {
+.view-receipt-page .info-value {
   font-size: 15px;
   font-weight: 600;
   color: #1e293b;
 }
 
-.status-badge {
+.view-receipt-page .status-badge {
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.status-approved {
+.view-receipt-page .status-approved {
   background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
   color: #166534;
   border: 1px solid #86efac;
 }
 
-.status-pending {
+.view-receipt-page .status-pending {
   background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
   color: #854d0e;
   border: 1px solid #fde047;
 }
 
-.status-rejected {
+.view-receipt-page .status-rejected {
   background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
   color: #991b1b;
   border: 1px solid #fca5a5;
 }
 
 /* Products Section */
-.products-section {
+.view-receipt-page .products-section {
   margin-bottom: 24px;
 }
 
-.section-title {
+.view-receipt-page .section-title {
   font-size: 18px;
   font-weight: 700;
   color: #1e293b;
@@ -141,23 +141,23 @@
   gap: 8px;
 }
 
-.products-table-wrapper {
+.view-receipt-page .products-table-wrapper {
   overflow-x: auto;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
 }
 
-.products-table {
+.view-receipt-page .products-table {
   width: 100%;
   min-width: 800px;
   border-collapse: collapse;
 }
 
-.products-table thead {
+.view-receipt-page .products-table thead {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-.products-table thead th {
+.view-receipt-page .products-table thead th {
   padding: 14px;
   text-align: left;
   font-size: 13px;
@@ -167,45 +167,45 @@
   letter-spacing: 0.5px;
 }
 
-.products-table tbody tr {
+.view-receipt-page .products-table tbody tr {
   border-bottom: 1px solid #e2e8f0;
   transition: background-color 0.2s;
 }
 
-.products-table tbody tr:hover {
+.view-receipt-page .products-table tbody tr:hover {
   background-color: #f8fafc;
 }
 
-.products-table tbody tr:last-child {
+.view-receipt-page .products-table tbody tr:last-child {
   border-bottom: none;
 }
 
-.products-table tbody td {
+.view-receipt-page .products-table tbody td {
   padding: 14px;
   font-size: 14px;
   color: #334155;
 }
 
-.col-product {
+.view-receipt-page .col-product {
   width: 35%;
   font-weight: 600;
 }
 
-.col-unit {
+.view-receipt-page .col-unit {
   width: 15%;
 }
 
-.col-quantity {
+.view-receipt-page .col-quantity {
   width: 15%;
   text-align: center;
 }
 
-.col-price {
+.view-receipt-page .col-price {
   width: 17.5%;
   text-align: right;
 }
 
-.col-total {
+.view-receipt-page .col-total {
   width: 17.5%;
   text-align: right;
   font-weight: 600;
@@ -213,7 +213,7 @@
 }
 
 /* Total Section */
-.total-section {
+.view-receipt-page .total-section {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -224,13 +224,13 @@
   border: 2px solid #93c5fd;
 }
 
-.total-label {
+.view-receipt-page .total-label {
   font-size: 18px;
   font-weight: 700;
   color: #1e40af;
 }
 
-.total-amount {
+.view-receipt-page .total-amount {
   font-size: 24px;
   font-weight: 800;
   color: #1e40af;

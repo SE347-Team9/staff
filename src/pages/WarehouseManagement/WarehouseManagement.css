@@ -390,63 +390,61 @@
 /* Action Buttons */
 .warehouse-management__action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
 }
 
 .warehouse-management__action-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 2px solid;
-  background: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0;
+}
+
+.warehouse-management__action-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .warehouse-management__action-btn--view {
-  color: #3b82f6;
-  border-color: #dbeafe;
+  background: #f0f9ff;
+  color: #0369a1;
 }
 
 .warehouse-management__action-btn--view:hover {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  background: #e0f2fe;
+  transform: scale(1.05);
 }
 
 .warehouse-management__action-btn--edit {
-  color: #10b981;
-  border-color: #d1fae5;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .warehouse-management__action-btn--edit:hover {
-  background: #10b981;
-  color: white;
-  border-color: #10b981;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  background: #fde68a;
+  transform: scale(1.05);
 }
 
 .warehouse-management__action-btn--delete {
-  color: #ef4444;
-  border-color: #fecaca;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .warehouse-management__action-btn--delete:hover {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  background: #fecaca;
+  transform: scale(1.05);
 }
 
-/* Modal */
+/* Status Badges */
 .warehouse-management__modal-overlay {
   position: fixed;
   top: 0;

@@ -388,76 +388,7 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Statistics Section */}
-      <div className="statistics-grid">
-        {/* Top Import Agencies */}
-        <div className="report-stat-card">
-          <div className="report-stat-card-header import">
-            <Package size={20} />
-            <h3>Danh sách đại lý có doanh số nhập hàng cao nhất</h3>
-          </div>
-          <div className="report-stat-card-body">
-            <table className="report-stat-table">
-              <thead>
-                <tr>
-                  <th>MÃ ĐẠI LÝ</th>
-                  <th>TÊN ĐẠI LÝ</th>
-                  <th>GIÁ TRỊ NHẬP</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topImportAgencies.map((agency) => (
-                  <tr key={agency.code}>
-                    <td>
-                      <span className="report-agency-code">{agency.code}</span>
-                    </td>
-                    <td>{agency.name}</td>
-                    <td>
-                      <span className="report-import-value">
-                        {agency.importValue.toLocaleString('vi-VN')} đ
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        {/* Top Debt Agencies */}
-        <div className="report-stat-card">
-          <div className="report-stat-card-header debt">
-            <CreditCard size={20} />
-            <h3>Danh sách đại lý có công nợ cao nhất</h3>
-          </div>
-          <div className="report-stat-card-body">
-            <table className="report-stat-table">
-              <thead>
-                <tr>
-                  <th>MÃ ĐẠI LÝ</th>
-                  <th>TÊN ĐẠI LÝ</th>
-                  <th>CÔNG NỢ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topDebtAgencies.map((agency) => (
-                  <tr key={agency.code}>
-                    <td>
-                      <span className="report-agency-code">{agency.code}</span>
-                    </td>
-                    <td>{agency.name}</td>
-                    <td>
-                      <span className="report-debt-value">
-                        {agency.debt.toLocaleString('vi-VN')} đ
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

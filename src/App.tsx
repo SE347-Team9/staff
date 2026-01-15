@@ -161,7 +161,7 @@ function App() {
               <AddReport />
             </MainLayout>
           } />
-          <Route path="/view-report/:reportId" element={
+          <Route path="/view-report/:id" element={
             <MainLayout>
               <ViewReport />
             </MainLayout>

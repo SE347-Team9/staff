@@ -26,16 +26,18 @@
   align-items: center;
   gap: 16px;
   position: relative;
+  justify-content: space-between;
 }
 
 .create-receipt-title {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
-  flex: 1;
+  flex: 0 0 auto;
+  margin-left: 48px;
 }
 
-.btn-back {
+.create-receipt-btn-back {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1.5px solid rgba(255, 255, 255, 0.3);
@@ -47,7 +49,7 @@
   transition: all 0.2s ease;
 }
 
-.btn-back:hover {
+.create-receipt-btn-back:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
 }
@@ -58,12 +60,12 @@
   overflow-x: visible;
 }
 
-.form-section {
+.create-receipt-form-section {
   margin-bottom: 24px;
   overflow-x: visible;
 }
 
-.form-label {
+.create-receipt-form-label {
   display: block;
   font-size: 14px;
   font-weight: 600;
@@ -71,7 +73,7 @@
   margin-bottom: 8px;
 }
 
-.form-select {
+.create-receipt-form-select {
   width: 100%;
   max-width: 100%;
   padding: 10px 14px;
@@ -84,25 +86,25 @@
   background: white;
 }
 
-.form-select:focus {
+.create-receipt-form-select:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Products Section */
-.products-section {
+.create-receipt-products-section {
   margin-bottom: 24px;
 }
 
-.section-title {
+.create-receipt-section-title {
   font-size: 18px;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 16px 0;
 }
 
-.products-table-wrapper {
+.create-receipt-products-table-wrapper {
   overflow-x: auto;
   border: 1.5px solid #cbd5e1;
   border-radius: 10px;
@@ -110,7 +112,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.products-table {
+.create-receipt-products-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
@@ -118,12 +120,12 @@
   min-width: 700px;
 }
 
-.products-table thead {
+.create-receipt-products-table thead {
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
   border-bottom: 2px solid #bfdbfe;
 }
 
-.products-table th {
+.create-receipt-products-table th {
   padding: 10px 12px;
   text-align: left;
   font-size: 12px;
@@ -135,20 +137,20 @@
   word-break: break-word;
 }
 
-.products-table tbody tr {
+.create-receipt-products-table tbody tr {
   border-bottom: 1px solid #e2e8f0;
   transition: background 0.15s ease;
 }
 
-.products-table tbody tr:hover {
+.create-receipt-products-table tbody tr:hover {
   background: #f8fafc;
 }
 
-.products-table tbody tr:last-child {
+.create-receipt-products-table tbody tr:last-child {
   border-bottom: none;
 }
 
-.products-table td {
+.create-receipt-products-table td {
   padding: 10px 12px;
   font-size: 13px;
   color: #334155;
@@ -182,9 +184,9 @@
   text-align: center;
 }
 
-.product-select,
-.quantity-input,
-.price-input {
+.create-receipt-product-select,
+.create-receipt-quantity-input,
+.create-receipt-price-input {
   width: 100%;
   padding: 6px 10px;
   border: 1.5px solid #cbd5e1;
@@ -195,22 +197,22 @@
   background: white;
 }
 
-.product-select:hover,
-.quantity-input:hover,
-.price-input:hover {
+.create-receipt-product-select:hover,
+.create-receipt-quantity-input:hover,
+.create-receipt-price-input:hover {
   border-color: #94a3b8;
 }
 
-.product-select:focus,
-.quantity-input:focus,
-.price-input:focus {
+.create-receipt-product-select:focus,
+.create-receipt-quantity-input:focus,
+.create-receipt-price-input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   background: #f8fafc;
 }
 
-.product-select {
+.create-receipt-product-select {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -220,7 +222,7 @@
   padding-right: 32px;
 }
 
-.unit-value {
+.create-receipt-unit-value {
   display: inline-block;
   min-width: 70px;
   padding: 10px 12px;
@@ -232,13 +234,13 @@
   border: 1.5px solid #e2e8f0;
 }
 
-.total-value {
+.create-receipt-total-value {
   font-weight: 700;
   color: #3b82f6;
   font-size: 14px;
 }
 
-.btn-remove-item {
+.create-receipt-btn-remove-item {
   padding: 6px;
   background: #fee2e2;
   color: #ef4444;
@@ -251,18 +253,18 @@
   justify-content: center;
 }
 
-.btn-remove-item:hover:not(:disabled) {
+.create-receipt-btn-remove-item:hover:not(:disabled) {
   background: #fecaca;
   border-color: #fca5a5;
   transform: scale(1.05);
 }
 
-.btn-remove-item:disabled {
+.create-receipt-btn-remove-item:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.btn-add-product {
+.create-receipt-btn-add-product {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -280,14 +282,14 @@
   width: auto;
 }
 
-.btn-add-product:hover {
+.create-receipt-btn-add-product:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(59, 130, 246, 0.35);
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 }
 
 /* Total Section */
-.total-section {
+.create-receipt-total-section {
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
   border: 2px solid #93c5fd;
   border-radius: 10px;
@@ -298,20 +300,20 @@
   justify-content: space-between;
 }
 
-.total-label {
+.create-receipt-total-label {
   font-size: 18px;
   font-weight: 700;
   color: #1e40af;
 }
 
-.total-amount {
+.create-receipt-total-amount {
   font-size: 20px;
   font-weight: 700;
   color: #3b82f6;
 }
 
 /* Form Actions */
-.form-actions {
+.create-receipt-form-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -320,8 +322,8 @@
   border-top: 2px solid #e2e8f0;
 }
 
-.btn-cancel,
-.btn-submit {
+.create-receipt-btn-cancel,
+.create-receipt-btn-submit {
   padding: 12px 32px;
   border: none;
   border-radius: 8px;
@@ -333,13 +335,13 @@
   letter-spacing: 0.5px;
 }
 
-.btn-cancel {
+.create-receipt-btn-cancel {
   background: white;
   color: #64748b;
   border: 2px solid #cbd5e1;
 }
 
-.btn-cancel:hover {
+.create-receipt-btn-cancel:hover {
   background: #f8fafc;
   border-color: #94a3b8;
   color: #475569;
@@ -347,21 +349,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.btn-submit {
+.create-receipt-btn-submit {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
   border: 2px solid transparent;
 }
 
-.btn-submit:hover {
+.create-receipt-btn-submit:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 }
 
-.btn-submit:active,
-.btn-cancel:active {
+.create-receipt-btn-submit:active,
+.create-receipt-btn-cancel:active {
   transform: translateY(0);
 }
 
@@ -384,17 +386,17 @@
     padding: 20px;
   }
 
-  .products-table-wrapper {
+  .create-receipt-products-table-wrapper {
     overflow-x: auto;
   }
 
-  .products-table {
+  .create-receipt-products-table {
     width: 100%;
     min-width: 700px;
   }
 
-  .products-table th,
-  .products-table td {
+  .create-receipt-products-table th,
+  .create-receipt-products-table td {
     padding: 10px 8px;
     font-size: 12px;
   }
@@ -420,18 +422,18 @@
     min-width: 60px;
   }
 
-  .btn-remove-item {
+  .create-receipt-btn-remove-item {
     padding: 4px;
     width: 28px;
     height: 28px;
   }
 
-  .form-actions {
+  .create-receipt-form-actions {
     flex-direction: column;
   }
 
-  .btn-cancel,
-  .btn-submit {
+  .create-receipt-btn-cancel,
+  .create-receipt-btn-submit {
     width: 100%;
   }
 }

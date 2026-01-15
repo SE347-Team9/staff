@@ -15,6 +15,7 @@ interface ProductBatch {
 
 interface Product {
   id: string
+  code: string
   name: string
   totalQuantity: number
   threshold: number
@@ -38,6 +39,7 @@ const WarehouseManagement = () => {
   const [products] = useState<Product[]>([
     {
       id: '1',
+        code: 'SP001',
       name: 'Bia Hà Nội',
       totalQuantity: 2000,
       threshold: 1500,
@@ -51,6 +53,7 @@ const WarehouseManagement = () => {
     },
     {
       id: '2',
+        code: 'SP002',
       name: 'Gạo ST25',
       totalQuantity: 200,
       threshold: 300,
@@ -64,6 +67,7 @@ const WarehouseManagement = () => {
     },
     {
       id: '3',
+        code: 'SP003',
       name: 'Sữa Vinamilk',
       totalQuantity: 0,
       threshold: 500,
@@ -77,6 +81,7 @@ const WarehouseManagement = () => {
     },
     {
       id: '4',
+        code: 'SP004',
       name: 'Nước ngọt Coca',
       totalQuantity: 2300,
       threshold: 2000,
@@ -133,6 +138,28 @@ const WarehouseManagement = () => {
         return 'Sắp hết hạn'
       default:
         return 'Bình thường'
+    }
+  }
+
+  const getNearestExpDate = (batches: ProductBatch[]) => {
+    if (batches.length === 0) return { date: '', daysRemaining: 0, dateString: '' }
+
+    const today = new Date()
+    const batchesWithDays = batches.map(batch => {
+      // Parse date in DD/MM/YYYY format
+      const [day, month, year] = batch.expDate.split('/').map(Number)
+      const expDate = new Date(year, month - 1, day)
+      const daysRemaining = Math.ceil((expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      return { ...batch, expDate, daysRemaining }
+    })
+
+    // Sort by days remaining (ascending)
+    const nearest = batchesWithDays.sort((a, b) => a.daysRemaining - b.daysRemaining)[0]
+
+    return {
+      date: nearest.expDate,
+      daysRemaining: nearest.daysRemaining,
+      dateString: nearest.expDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
     }
   }
 
@@ -286,11 +313,13 @@ const WarehouseManagement = () => {
           <table className="warehouse-management__table">
             <thead>
               <tr>
+                                <th>MÃ SP</th>
                 <th>SẢN PHẨM</th>
                 <th>TỔNG TỒN</th>
                 <th>ĐỊNH MỨC</th>
                 <th>ĐƠN VỊ</th>
                 <th>LOẠI KHO</th>
+                                <th>HSD GẦN NHẤT</th>
                 <th>TRẠNG THÁI</th>
                 <th>THAO TÁC</th>
               </tr>
@@ -298,6 +327,9 @@ const WarehouseManagement = () => {
             <tbody>
               {filteredProducts.map((product) => (
                 <tr key={product.id}>
+                                    <td>
+                                      <span className="warehouse-management__product-code">{product.code}</span>
+                                    </td>
                   <td>
                     <span className="warehouse-management__product-name">{product.name}</span>
                   </td>
@@ -309,6 +341,17 @@ const WarehouseManagement = () => {
                   </td>
                   <td>{product.unit}</td>
                   <td>{product.warehouseType}</td>
+                                    <td>
+                                      <span className="warehouse-management__exp-date">
+                                        {getNearestExpDate(product.batches).dateString && (
+                                          <>
+                                            {getNearestExpDate(product.batches).dateString}
+                                            <br />
+                                            <small>({getNearestExpDate(product.batches).daysRemaining} ngày)</small>
+                                          </>
+                                        )}
+                                      </span>
+                                    </td>
                   <td>
                     <span className={`warehouse-management__status warehouse-management__status--${getStatusColor(product.status)}`}>
                       {getStatusLabel(product.status)}

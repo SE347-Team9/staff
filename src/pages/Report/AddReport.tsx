@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FileText, ArrowLeft, Plus, Trash2, ChevronDown } from 'lucide-react'
+import { FileText, ArrowLeft, Plus, Trash2, ChevronDown, ClipboardList, Package } from 'lucide-react'
 import { toast } from 'react-toastify'
 import './AddReport.css'
 
@@ -201,13 +201,6 @@ const AddReport = () => {
     <div className="add-report-page">
       {/* Page Header */}
       <div className="add-report-header">
-        <button
-          className="btn-back"
-          onClick={() => navigate('/reports')}
-          title="Quay lại"
-        >
-          <ArrowLeft size={20} />
-        </button>
         <div className="header-icon-box">
           <FileText size={36} />
         </div>
@@ -217,12 +210,25 @@ const AddReport = () => {
             Tạo báo cáo nhập kho, phân phối hoặc công nợ
           </p>
         </div>
+        <button
+          className="btn-back"
+          onClick={() => navigate('/reports')}
+          title="Quay lại"
+        >
+          <ArrowLeft size={20} />
+          Quay lại
+        </button>
       </div>
 
       <form onSubmit={handleSubmit} className="add-report-form">
         {/* Common Section */}
         <div className="form-section">
-          <h2 className="section-title">🧾 Thông tin báo cáo</h2>
+          <h2 className="section-title">
+            <span className="section-icon">
+              <ClipboardList size={18} />
+            </span>
+            Thông tin báo cáo
+          </h2>
           
           <div className="form-grid">
             {/* Report Code */}
@@ -264,7 +270,7 @@ const AddReport = () => {
                 type="text"
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                placeholder="tháng/năm vd 10/2024"
+                placeholder="MM/YY"
                 className="form-input"
               />
             </div>
@@ -296,7 +302,12 @@ const AddReport = () => {
         {/* Import Report Section */}
         {reportType === 'import' && (
           <div className="form-section">
-            <h2 className="section-title">📦 Báo cáo nhập kho</h2>
+            <h2 className="section-title">
+              <span className="section-icon">
+                <Package size={18} />
+              </span>
+              Báo cáo nhập kho
+            </h2>
             
             {/* Filters */}
             <div className="filters-grid">
@@ -311,23 +322,6 @@ const AddReport = () => {
                     <option value="all">Tất cả</option>
                     <option value="nsx1">Nhà sản xuất 1</option>
                     <option value="nsx2">Nhà sản xuất 2</option>
-                  </select>
-                  <ChevronDown size={20} className="select-icon" />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Kho</label>
-                <div className="custom-select">
-                  <select
-                    value={warehouseFilter}
-                    onChange={(e) => setWarehouseFilter(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="all">Tất cả</option>
-                    <option value="regular">Kho thường</option>
-                    <option value="cool">Kho mát</option>
-                    <option value="frozen">Kho đông</option>
                   </select>
                   <ChevronDown size={20} className="select-icon" />
                 </div>
@@ -420,10 +414,6 @@ const AddReport = () => {
 
               {/* Summary */}
               <div className="summary-section">
-                <div className="summary-item">
-                  <span>Tổng số phiếu nhập:</span>
-                  <strong>{importDetails.length}</strong>
-                </div>
                 <div className="summary-item highlight">
                   <span>Tổng giá trị nhập kho:</span>
                   <strong>{importTotal.toLocaleString('vi-VN')} đ</strong>
@@ -451,23 +441,6 @@ const AddReport = () => {
                     <option value="all">Tất cả</option>
                     <option value="agency1">Đại lý A</option>
                     <option value="agency2">Đại lý B</option>
-                  </select>
-                  <ChevronDown size={20} className="select-icon" />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Kho xuất</label>
-                <div className="custom-select">
-                  <select
-                    value={warehouseFilterDist}
-                    onChange={(e) => setWarehouseFilterDist(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="all">Tất cả</option>
-                    <option value="regular">Kho thường</option>
-                    <option value="cool">Kho mát</option>
-                    <option value="frozen">Kho đông</option>
                   </select>
                   <ChevronDown size={20} className="select-icon" />
                 </div>
@@ -560,10 +533,6 @@ const AddReport = () => {
 
               {/* Summary */}
               <div className="summary-section">
-                <div className="summary-item">
-                  <span>Tổng số phiếu xuất:</span>
-                  <strong>{distributionDetails.length}</strong>
-                </div>
                 <div className="summary-item highlight">
                   <span>Tổng giá trị phân phối:</span>
                   <strong>{distributionTotal.toLocaleString('vi-VN')} đ</strong>
@@ -591,23 +560,6 @@ const AddReport = () => {
                     <option value="all">Tất cả</option>
                     <option value="agency1">Đại lý A</option>
                     <option value="agency2">Đại lý B</option>
-                  </select>
-                  <ChevronDown size={20} className="select-icon" />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Trạng thái</label>
-                <div className="custom-select">
-                  <select
-                    value={statusFilterDebt}
-                    onChange={(e) => setStatusFilterDebt(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="all">Tất cả</option>
-                    <option value="unpaid">Chưa thanh toán</option>
-                    <option value="partial">Thanh toán 1 phần</option>
-                    <option value="paid">Đã thanh toán</option>
                   </select>
                   <ChevronDown size={20} className="select-icon" />
                 </div>

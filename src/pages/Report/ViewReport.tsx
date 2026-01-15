@@ -1,241 +1,279 @@
+import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { FileText, ArrowLeft, Download, FileSpreadsheet } from 'lucide-react'
-import * as XLSX from 'xlsx'
-import html2pdf from 'html2pdf.js'
-import { toast } from 'react-toastify'
+import { FileText, ArrowLeft } from 'lucide-react'
 import './ViewReport.css'
+
+interface ImportDetail {
+  id: string
+  product: string
+  unit: string
+  quantity: number
+  unitPrice: number
+}
+
+interface DistributionDetail {
+  id: string
+  agency: string
+  product: string
+  quantity: number
+  unitPrice: number
+}
+
+interface DebtDetail {
+  id: string
+  agency: string
+  totalDue: number
+  collected: number
+}
 
 interface ReportData {
   id: string
   code: string
-  title: string
-  type: 'revenue' | 'debt'
+  type: 'import' | 'distribution' | 'debt'
   typeLabel: string
-  reportPeriod: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
-  reportPeriodLabel: string
-  startDate: string
-  endDate: string
-  notes: string
+  period: string
+  staff: string
   createdDate: string
-  status: 'completed' | 'pending'
-  statusLabel: string
-  createdAt: string
-  createdBy: string
-}
-
-interface AgencyData {
-  code: string
-  name: string
-  value: number
+  manufacturerFilter?: string
+  agencyFilter?: string
+  importDetails?: ImportDetail[]
+  distributionDetails?: DistributionDetail[]
+  debtDetails?: DebtDetail[]
 }
 
 const ViewReport = () => {
   const navigate = useNavigate()
-  const { reportId } = useParams<{ reportId: string }>()
+  const { id } = useParams()
 
-  // Mock report data - in real app, fetch from API
-  const reportData: ReportData = {
-    id: reportId || '1',
-    code: 'BC4',
-    title: 'Báo cáo doanh số',
-    type: 'revenue',
-    typeLabel: 'Doanh số',
-    reportPeriod: 'monthly',
-    reportPeriodLabel: 'Theo tháng',
-    startDate: '01/11/2025',
-    endDate: '30/11/2025',
-    notes: 'Báo cáo doanh số tháng 11 năm 2025 của các đại lý',
-    createdDate: '11/10/2025',
-    status: 'completed',
-    statusLabel: 'Hoàn thành',
-    createdAt: '11/10/2025 14:30',
-    createdBy: 'Admin User'
-  }
-
-  // Mock agency data
-  const agencyData: AgencyData[] = [
-    { code: 'DL1', name: 'Đại lý Nghĩa', value: 1530000 },
-    { code: 'DL2', name: 'Đại lý Đại', value: 900000 }
-  ]
-
-  const totalValue = agencyData.reduce((sum, item) => sum + item.value, 0)
-
-  // Export report to Excel
-  const exportToExcel = () => {
-    const wb = XLSX.utils.book_new()
-
-    // Report info sheet
-    const reportInfo = [
-      { 'Thông tin': 'Mã báo cáo', 'Giá trị': reportData.code },
-      { 'Thông tin': 'Tiêu đề', 'Giá trị': reportData.title },
-      { 'Thông tin': 'Loại báo cáo', 'Giá trị': reportData.typeLabel },
-      { 'Thông tin': 'Kỳ báo cáo', 'Giá trị': reportData.reportPeriodLabel },
-      { 'Thông tin': 'Ngày bắt đầu', 'Giá trị': reportData.startDate },
-      { 'Thông tin': 'Ngày kết thúc', 'Giá trị': reportData.endDate },
-      { 'Thông tin': 'Ghi chú', 'Giá trị': reportData.notes },
-      { 'Thông tin': 'Ngày tạo', 'Giá trị': reportData.createdAt },
-      { 'Thông tin': 'Người tạo', 'Giá trị': reportData.createdBy },
-      { 'Thông tin': 'Trạng thái', 'Giá trị': reportData.statusLabel }
+  // Mock report data - in thực tế sẽ fetch từ API
+  const [report] = useState<ReportData>({
+    id: id || '1',
+    code: 'BC1',
+    type: 'import',
+    typeLabel: 'Nhập kho',
+    period: '10/2025',
+    staff: 'Nguyễn Văn A',
+    createdDate: '15/01/2025',
+    manufacturerFilter: 'all',
+    importDetails: [
+      {
+        id: '1',
+        product: 'Sản phẩm A',
+        unit: 'kg',
+        quantity: 100,
+        unitPrice: 450000
+      },
+      {
+        id: '2',
+        product: 'Sản phẩm B',
+        unit: 'hộp',
+        quantity: 50,
+        unitPrice: 200000
+      }
     ]
+  })
 
-    const ws1 = XLSX.utils.json_to_sheet(reportInfo)
-    XLSX.utils.book_append_sheet(wb, ws1, 'Thông tin báo cáo')
+  // Calculate totals
+  const importTotal = useMemo(() => {
+    return report.importDetails?.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0) || 0
+  }, [report.importDetails])
 
-    // Agency data sheet
-    const agencyInfo = agencyData.map(agency => ({
-      'Mã đại lý': agency.code,
-      'Tên đại lý': agency.name,
-      'Giá trị': agency.value.toLocaleString('vi-VN')
-    }))
+  const distributionTotal = useMemo(() => {
+    return report.distributionDetails?.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0) || 0
+  }, [report.distributionDetails])
 
-    const ws2 = XLSX.utils.json_to_sheet(agencyInfo)
-    XLSX.utils.book_append_sheet(wb, ws2, `Chi tiết ${reportData.typeLabel}`)
-
-    const filename = `BaoCao_${reportData.code}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`
-    XLSX.writeFile(wb, filename)
-    toast.success(`Xuất báo cáo ${reportData.code} sang Excel thành công!`)
-  }
-
-  // Export report to PDF
-  const exportToPDF = () => {
-    const element = document.getElementById('report-content')
-    if (!element) return
-
-    const opt = {
-      margin: 10,
-      filename: `BaoCao_${reportData.code}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`,
-      image: { type: 'jpeg' as const, quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { orientation: 'portrait' as const, unit: 'mm', format: 'a4' }
-    }
-
-    html2pdf().set(opt).from(element).save()
-    toast.success(`Xuất báo cáo ${reportData.code} sang PDF thành công!`)
-  }
-
-  const handleBack = () => {
-    navigate('/reports')
-  }
+  const debtTotal = useMemo(() => {
+    return report.debtDetails?.reduce((sum, item) => sum + (item.totalDue - item.collected), 0) || 0
+  }, [report.debtDetails])
 
   return (
     <div className="view-report-page">
-      <div className="view-report-container">
-        {/* Back Button */}
-        <button className="view-report__back-button" onClick={handleBack}>
-          <ArrowLeft size={20} />
-          Quay lại
-        </button>
+      <button
+        className="view-report__back-button"
+        onClick={() => navigate('/reports')}
+        title="Quay lại"
+      >
+        <ArrowLeft size={18} />
+        Quay lại
+      </button>
 
-        {/* Header */}
-        <div className="view-report__header">
-          <div className="view-report__header-icon">
-            <FileText size={36} />
-          </div>
-          <div className="view-report__header-content">
-            <h1 className="view-report__title">Xem báo cáo</h1>
-            <p className="view-report__subtitle">
-              Chi tiết về báo cáo {reportData.typeLabel.toLowerCase()} đã lập
-            </p>
-          </div>
-          <div className="view-report__actions-header">
-            <button className="view-report__btn view-report__btn--icon" onClick={exportToExcel} title="Xuất Excel">
-              <FileSpreadsheet size={20} />
-            </button>
-            <button className="view-report__btn view-report__btn--icon" onClick={exportToPDF} title="Xuất PDF">
-              <Download size={20} />
-            </button>
-          </div>
+      {/* Page Header */}
+      <div className="view-report__header">
+        <div className="view-report__header-icon">
+          <FileText size={36} />
         </div>
+        <div className="view-report__header-content">
+          <h1 className="view-report__title">Chi tiết báo cáo</h1>
+          <p className="view-report__subtitle">
+            Xem chi tiết các thông tin báo cáo {report.typeLabel.toLowerCase()}
+          </p>
+        </div>
+      </div>
 
-        {/* Report Content */}
-        <div id="report-content" className="view-report__content">
-          {/* Report Info Card */}
+      <div className="view-report-container">
+        <div className="view-report__content">
+          {/* Report Info Section */}
           <div className="view-report__card">
-            <h2 className="view-report__card-title">Thông tin báo cáo</h2>
-            <div className="view-report__info-grid">
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Mã báo cáo:</span>
-                <span className="view-report__info-value">{reportData.code}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Tiêu đề:</span>
-                <span className="view-report__info-value">{reportData.title}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Loại báo cáo:</span>
-                <span className="view-report__info-value">{reportData.typeLabel}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Kỳ báo cáo:</span>
-                <span className="view-report__info-value">{reportData.reportPeriodLabel}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Ngày bắt đầu:</span>
-                <span className="view-report__info-value">{reportData.startDate}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Ngày kết thúc:</span>
-                <span className="view-report__info-value">{reportData.endDate}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Ngày tạo:</span>
-                <span className="view-report__info-value">{reportData.createdAt}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Người tạo:</span>
-                <span className="view-report__info-value">{reportData.createdBy}</span>
-              </div>
-              <div className="view-report__info-item">
-                <span className="view-report__info-label">Trạng thái:</span>
-                <span className={`view-report__status ${reportData.status}`}>
-                  {reportData.statusLabel}
-                </span>
-              </div>
+          <h2 className="view-report__card-title">Thông tin báo cáo</h2>
+          
+          <div className="view-report__info-grid">
+            <div className="view-report__info-item">
+              <label className="view-report__info-label">Mã báo cáo</label>
+              <p className="view-report__info-value">{report.code}</p>
             </div>
-
-            {/* Notes */}
-            {reportData.notes && (
-              <div className="view-report__notes">
-                <h3 className="view-report__notes-title">Ghi chú</h3>
-                <p className="view-report__notes-content">{reportData.notes}</p>
-              </div>
-            )}
+            <div className="view-report__info-item">
+              <label className="view-report__info-label">Loại báo cáo</label>
+              <p className="view-report__info-value">{report.typeLabel}</p>
+            </div>
+            <div className="view-report__info-item">
+              <label className="view-report__info-label">Kỳ báo cáo</label>
+              <p className="view-report__info-value">{report.period}</p>
+            </div>
+            <div className="view-report__info-item">
+              <label className="view-report__info-label">Staff lập báo cáo</label>
+              <p className="view-report__info-value">{report.staff}</p>
+            </div>
+            <div className="view-report__info-item">
+              <label className="view-report__info-label">Ngày lập</label>
+              <p className="view-report__info-value">{report.createdDate}</p>
+            </div>
+          </div>
           </div>
 
-          {/* Data Table Card */}
-          <div className="view-report__card">
-            <h2 className="view-report__card-title">Chi tiết {reportData.typeLabel.toLowerCase()}</h2>
+          {/* Import Report Details */}
+          {report.type === 'import' && report.importDetails && (
+            <div className="view-report__card">
+            <h2 className="view-report__card-title">Chi tiết nhập kho</h2>
+            
             <div className="view-report__table-container">
               <table className="view-report__table">
                 <thead>
                   <tr>
-                    <th>MÃ ĐẠI LÝ</th>
-                    <th>TÊN ĐẠI LÝ</th>
-                    <th className="text-right">{reportData.typeLabel.toUpperCase()}</th>
+                    <th>Sản phẩm</th>
+                    <th>Đơn vị</th>
+                    <th>SL nhập</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {agencyData.map((agency, index) => (
-                    <tr key={index}>
-                      <td className="text-bold">{agency.code}</td>
-                      <td>{agency.name}</td>
-                      <td className="text-right text-bold">
-                        {agency.value.toLocaleString('vi-VN')} đ
+                  {report.importDetails.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.product}</td>
+                      <td>{item.unit}</td>
+                      <td className="text-right">{item.quantity.toLocaleString('vi-VN')}</td>
+                      <td className="text-right">{item.unitPrice.toLocaleString('vi-VN')} đ</td>
+                      <td className="view-report-page text-right text-highlight text-bold view-report__amount">
+                        {(item.quantity * item.unitPrice).toLocaleString('vi-VN')} đ
                       </td>
                     </tr>
                   ))}
-                  <tr className="view-report__table-footer">
-                    <td colSpan={2} className="text-bold">
-                      Tổng cộng
-                    </td>
-                    <td className="text-right text-bold text-highlight">
-                      {totalValue.toLocaleString('vi-VN')} đ
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
-          </div>
+
+            {/* Summary */}
+            <div className="view-report__stats-summary">
+              <div className="view-report__stat">
+                <span className="view-report__stat-label">Tổng giá trị nhập kho</span>
+                <span className="view-report__stat-value text-highlight">{importTotal.toLocaleString('vi-VN')} đ</span>
+              </div>
+            </div>
+            </div>
+          )}
+
+          {/* Distribution Report Details */}
+          {report.type === 'distribution' && report.distributionDetails && (
+            <div className="view-report__card">
+            <h2 className="view-report__card-title">Chi tiết phân phối</h2>
+            
+            <div className="view-report__table-container">
+              <table className="view-report__table">
+                <thead>
+                  <tr>
+                    <th>Đại lý</th>
+                    <th>Sản phẩm</th>
+                    <th>SL xuất</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.distributionDetails.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.agency}</td>
+                      <td>{item.product}</td>
+                      <td className="text-right">{item.quantity.toLocaleString('vi-VN')}</td>
+                      <td className="text-right">{item.unitPrice.toLocaleString('vi-VN')} đ</td>
+                      <td className="view-report-page text-right text-highlight text-bold view-report__amount">
+                        {(item.quantity * item.unitPrice).toLocaleString('vi-VN')} đ
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Summary */}
+            <div className="view-report__stats-summary">
+              <div className="view-report__stat">
+                <span className="view-report__stat-label">Tổng giá trị phân phối</span>
+                <span className="view-report__stat-value text-highlight">{distributionTotal.toLocaleString('vi-VN')} đ</span>
+              </div>
+            </div>
+            </div>
+          )}
+
+          {/* Debt Report Details */}
+          {report.type === 'debt' && report.debtDetails && (
+            <div className="view-report__card">
+            <h2 className="view-report__card-title">Chi tiết công nợ</h2>
+            
+            <div className="view-report__table-container">
+              <table className="view-report__table">
+                <thead>
+                  <tr>
+                    <th>Đại lý</th>
+                    <th>Tổng phải thu</th>
+                    <th>Đã thu</th>
+                    <th>Còn nợ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.debtDetails.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.agency}</td>
+                      <td className="text-right">{item.totalDue.toLocaleString('vi-VN')} đ</td>
+                      <td className="text-right">{item.collected.toLocaleString('vi-VN')} đ</td>
+                      <td className="view-report-page text-right text-highlight text-bold view-report__amount">
+                        {(item.totalDue - item.collected).toLocaleString('vi-VN')} đ
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Summary */}
+            <div className="view-report__stats-summary">
+              <div className="view-report__stat">
+                <span className="view-report__stat-label">Tổng công nợ còn lại</span>
+                <span className="view-report__stat-value text-highlight">{debtTotal.toLocaleString('vi-VN')} đ</span>
+              </div>
+            </div>
+            </div>
+          )}
+        </div>
+
+        {/* Form Actions */}
+        <div className="view-report__footer">
+          <button
+            type="button"
+            onClick={() => navigate('/reports')}
+            className="view-report__btn view-report__btn--secondary"
+          >
+            Đóng
+          </button>
         </div>
       </div>
     </div>

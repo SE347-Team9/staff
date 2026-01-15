@@ -5,6 +5,7 @@ import EditPayment from './pages/PaymentManagement/EditPayment';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './routes/auth/Login'
 import Register from './routes/auth/Register'
+import HomePage from './routes/home/index'
 import MainLayout from './components/layout/MainLayout'
 import Reports from './pages/Report/Reports'
 import AddReport from './pages/Report/AddReport'
@@ -15,6 +16,13 @@ import ExportManagement from './pages/ExportManagement/ExportManagement'
 import CreateExport from './pages/ExportManagement/CreateExport'
 import ReceiveGoods from './pages/ReceiveGoods/ReceiveGoods'
 import CreateReceipt from './pages/ReceiveGoods/CreateReceipt'
+import ViewReceipt from './pages/ReceiveGoods/ViewReceipt'
+import EditReceipt from './pages/ReceiveGoods/EditReceipt'
+import CreateReceiveOrder from './pages/ReceiveGoods/CreateReceiveOrder'
+import ReceiveManagement from './pages/ReceiveManagement/ReceiveManagement'
+import ViewReceiveOrder from './pages/ReceiveManagement/ViewReceiveOrder'
+import EditReceiveOrder from './pages/ReceiveManagement/EditReceiveOrder'
+import WarehouseManagement from './pages/WarehouseManagement/WarehouseManagement'
 import PaymentManagement from './pages/PaymentManagement/PaymentManagement'
 import CreateReceiptVoucher from './pages/PaymentManagement/CreateReceiptVoucher'
 import Regulations from './pages/Regulations/Regulations'
@@ -33,6 +41,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/home" element={
+            <MainLayout>
+              <HomePage />
+            </MainLayout>
+          } />
           <Route path="/agency-management" element={
             <MainLayout>
               <AgencyManagement />
@@ -78,6 +91,41 @@ function App() {
               <CreateReceipt />
             </MainLayout>
           } />
+          <Route path="/import/view/:id" element={
+            <MainLayout>
+              <ViewReceipt />
+            </MainLayout>
+          } />
+          <Route path="/import/edit/:id" element={
+            <MainLayout>
+              <EditReceipt />
+            </MainLayout>
+          } />
+          <Route path="/create-receive-order" element={
+            <MainLayout>
+              <CreateReceiveOrder />
+            </MainLayout>
+          } />
+          <Route path="/receive-management" element={
+            <MainLayout>
+              <ReceiveManagement />
+            </MainLayout>
+          } />
+          <Route path="/receive-order/view/:id" element={
+            <MainLayout>
+              <ViewReceiveOrder />
+            </MainLayout>
+          } />
+          <Route path="/receive-order/edit/:id" element={
+            <MainLayout>
+              <EditReceiveOrder />
+            </MainLayout>
+          } />
+          <Route path="/warehouse-management" element={
+            <MainLayout>
+              <WarehouseManagement />
+            </MainLayout>
+          } />
           <Route path="/create-receipt-voucher" element={
             <MainLayout>
               <CreateReceiptVoucher />
@@ -113,7 +161,7 @@ function App() {
               <AddReport />
             </MainLayout>
           } />
-          <Route path="/view-report/:reportId" element={
+          <Route path="/view-report/:id" element={
             <MainLayout>
               <ViewReport />
             </MainLayout>
@@ -133,7 +181,7 @@ function App() {
               <EditImport />
             </MainLayout>
           } />
-          <Route path="/" element={<Navigate to="/agency-management" replace />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

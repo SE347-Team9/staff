@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
-import { DollarSign, Plus, Search, Edit, Trash2, CheckCircle } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { DollarSign, Search, Edit, Trash2 } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import './PaymentManagement.css'
 
 interface Payment {
@@ -16,29 +16,80 @@ interface Payment {
 const PaymentManagement = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
 
   // Mock data
-  const [payments, setPayments] = useState<Payment[]>([
-    {
-      id: '1',
-      code: '2',
-      date: '2024-05-16',
-      agency: 'Đại lý Đại',
-      amount: 300000,
-      status: 'paid'
-    },
-    {
-      id: '2',
-      code: '1',
-      date: '2024-05-15',
-      agency: 'Đại lý Nghĩa',
-      amount: 500000,
-      status: 'paid'
-    }
-  ]);
+  const defaultPayments: Payment[] = []
 
-  const totalPayments = 2
-  const totalAmount = 800000
+  const [payments, setPayments] = useState<Payment[]>(defaultPayments)
+
+  const loadPayments = () => {
+    const saved = localStorage.getItem('customPayments')
+    console.log('Loading payments from localStorage:', saved)
+    if (saved) {
+      try {
+        const parsed: Payment[] = JSON.parse(saved)
+        console.log('Parsed payments:', parsed)
+        if (Array.isArray(parsed)) {
+          console.log('Setting payments state:', parsed)
+          setPayments(parsed)
+        } else {
+          setPayments(defaultPayments)
+        }
+      } catch (e) {
+        console.error('Failed to parse payments', e)
+        setPayments(defaultPayments)
+      }
+    } else {
+      console.log('No payments in localStorage, setting to empty')
+      setPayments(defaultPayments)
+    }
+  }
+
+  // Load payments when location changes (including pathname)
+  useEffect(() => {
+    console.log('Location pathname changed to:', location.pathname)
+    if (location.pathname === '/payment-management') {
+      console.log('Loading payments due to pathname change')
+      loadPayments()
+    }
+  }, [location.pathname])
+
+  // Also load on component mount
+  useEffect(() => {
+    console.log('PaymentManagement component mounted, loading payments')
+    loadPayments()
+  }, [])
+
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('Window focused, reloading payments')
+      loadPayments()
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+
+  }, [])
+
+  // Listen for custom event to update payments immediately after creation
+  useEffect(() => {
+    const handlePaymentsUpdated = (event: any) => {
+      console.log('Custom event paymentsUpdated received:', event.detail)
+      if (event.detail && event.detail.payments) {
+        setPayments(event.detail.payments)
+      } else {
+        loadPayments()
+      }
+    }
+    window.addEventListener('paymentsUpdated', handlePaymentsUpdated)
+    return () => window.removeEventListener('paymentsUpdated', handlePaymentsUpdated)
+  }, [])
+
+  // Do NOT persist payments back to localStorage here to avoid overwriting
+  // newly created records from CreateExport during initial render.
+
+  const totalPayments = payments.length
+  const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0)
 
   const filteredPayments = payments.filter(payment =>
     payment.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -79,8 +130,14 @@ const PaymentManagement = () => {
     setDeletePayment(null);
   };
 
-  const handleAddPayment = () => {
-    navigate('/create-receipt-voucher');
+  const formatDateDisplay = (isoOrYmd: string) => {
+    // Accept 'yyyy-mm-dd' and return 'dd-mm-yyyy'
+    const parts = isoOrYmd.split('-')
+    if (parts.length === 3) {
+      const [year, month, day] = parts
+      return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
+    }
+    return isoOrYmd
   }
 
   return (
@@ -93,12 +150,7 @@ const PaymentManagement = () => {
         <div className="payment-management__header-text">
           <h1 className="payment-management__title">Phiếu Thu Của Tôi</h1>
         </div>
-        <div className="payment-management__header-actions">
-          <button className="payment-management__header-btn payment-management__header-btn--primary" onClick={handleAddPayment}>
-            <Plus size={20} />
-            <span>Thêm phiếu thu</span>
-          </button>
-        </div>
+        <div className="payment-management__header-actions"></div>
       </div>
 
       {/* Statistics Cards */}
@@ -164,7 +216,7 @@ const PaymentManagement = () => {
                         <span>{payment.code}</span>
                       </div>
                     </td>
-                    <td>{payment.date}</td>
+                    <td>{formatDateDisplay(payment.date)}</td>
                     <td>
                       <div className="payment-management__agency-name">
                         {payment.agency}
@@ -176,10 +228,14 @@ const PaymentManagement = () => {
                       </span>
                     </td>
                     <td>
-                      <span className={`payment-management__status payment-management__status--${payment.status}`}>
-                        <CheckCircle size={16} />
-                        <span>Đã thanh toán</span>
-                      </span>
+                      <select
+                        className="payment-status-select"
+                        value={payment.status}
+                        onChange={(e) => setPayments(prev => prev.map(p => p.id === payment.id ? { ...p, status: e.target.value as 'paid' | 'pending' } : p))}
+                      >
+                        <option value="paid">Đã thanh toán</option>
+                        <option value="pending">Chưa thanh toán</option>
+                      </select>
                     </td>
                     <td>
                       <div className="payment-management__action-buttons">

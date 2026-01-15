@@ -422,7 +422,7 @@
 }
 
 .col-status {
-  width: 180px;
+  width: 170px;
 }
 
 .col-actions {
@@ -455,28 +455,22 @@
 }
 
 /* Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 13px;
+.status-select {
+  width: 140px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #dfe7f5;
+  background: #ffffff;
+  color: #111827;
   font-weight: 600;
-  text-align: center;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.status-delivered {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-cancelled {
-  background: #fee2e2;
-  color: #991b1b;
+.status-select:focus {
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 
 /* Action Buttons */
@@ -484,59 +478,57 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .export-management__action-icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 2px solid;
-  background: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0;
+}
+
+.export-management__action-icon-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .export-management__action-icon-btn--view {
-  color: #3b82f6;
-  border-color: #dbeafe;
+  background: #f0f9ff;
+  color: #0369a1;
 }
 
 .export-management__action-icon-btn--view:hover {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  background: #e0f2fe;
+  transform: scale(1.05);
 }
 
 .export-management__action-icon-btn--edit {
-  color: #10b981;
-  border-color: #d1fae5;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .export-management__action-icon-btn--edit:hover {
-  background: #10b981;
-  color: white;
-  border-color: #10b981;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  background: #fde68a;
+  transform: scale(1.05);
 }
 
 .export-management__action-icon-btn--delete {
-  color: #ef4444;
-  border-color: #fecaca;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .export-management__action-icon-btn--delete:hover {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  background: #fecaca;
+  transform: scale(1.05);
 }
 
 /* No Data State */
@@ -592,6 +584,15 @@
   font-weight: 700;
 }
 
+.status-insufficient {
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .inventory-items {
   margin-bottom: 10px;
 }
@@ -604,6 +605,14 @@
   border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
   color: #22223b;
+}
+
+.inventory-item.insufficient {
+  background: #fef2f2;
+  padding: 8px;
+  border-radius: 6px;
+  border-bottom: none;
+  margin-bottom: 8px;
 }
 
 .inventory-item:last-child {
@@ -632,6 +641,10 @@
   font-size: 13px;
 }
 
+.item-status.error {
+  color: #dc2626;
+}
+
 .inventory-summary {
   margin: 10px 0 14px 0;
   font-size: 14px;
@@ -648,6 +661,11 @@
 
 .summary-result {
   color: #059669;
+}
+
+.summary-result.error-text {
+  color: #dc2626;
+}
   font-weight: 600;
 }
 

@@ -14,20 +14,35 @@ interface ReceiptItem {
 
 const CreateReceipt = () => {
   const navigate = useNavigate()
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+   const [manufacturer, setManufacturer] = useState('')
   const [items, setItems] = useState<ReceiptItem[]>([
-    { id: 1, product: '', unit: 'Thùng', quantity: 0, price: 250000, total: 0 }
+    { id: 1, product: '', unit: '', quantity: 0, price: 0, total: 0 }
   ])
 
   // Mock products data with units and prices
-  const products = [
-    { name: 'Bia Hà Nội', unit: 'Thùng', price: 250000 },
-    { name: 'Gạo ST25', unit: 'Kg', price: 25000 },
-    { name: 'Nước ngọt Coca', unit: 'Chai', price: 10000 },
-    { name: 'Nước ngọt Pepsi', unit: 'Lon', price: 9000 },
-    { name: 'Snack Oishi', unit: 'Gói', price: 12000 },
-    { name: 'Sữa Vinamilk', unit: 'Lốc', price: 60000 }
-  ]
+   // Mock manufacturers and products
+   const manufacturers = [
+     {
+       name: 'Công ty A',
+       products: [
+         { name: 'Bia Hà Nội', unit: 'Thùng', price: 250000 },
+         { name: 'Nước ngọt Coca', unit: 'Chai', price: 10000 },
+         { name: 'Snack Oishi', unit: 'Gói', price: 12000 }
+       ]
+     },
+     {
+       name: 'Công ty B',
+       products: [
+         { name: 'Gạo ST25', unit: 'Kg', price: 25000 },
+         { name: 'Sữa Vinamilk', unit: 'Lốc', price: 60000 },
+         { name: 'Nước ngọt Pepsi', unit: 'Lon', price: 9000 }
+       ]
+     }
+   ]
+
+   const currentProducts = manufacturer
+     ? manufacturers.find(m => m.name === manufacturer)?.products || []
+     : []
 
   const calculateTotal = () => {
     return items.reduce((sum, item) => sum + item.total, 0)
@@ -35,7 +50,17 @@ const CreateReceipt = () => {
 
   const handleAddItem = () => {
     const newId = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1
-    setItems([...items, { id: newId, product: '', unit: 'Thùng', quantity: 0, price: 250000, total: 0 }])
+    setItems([...items, { id: newId, product: '', unit: '', quantity: 0, price: 0, total: 0 }])
+  }
+
+  const handlePriceChange = (id: number, price: number) => {
+    setItems(items.map(item => {
+      if (item.id === id) {
+        const updatedItem = { ...item, price, total: price * item.quantity }
+        return updatedItem
+      }
+      return item
+    }))
   }
 
   const handleRemoveItem = (id: number) => {
@@ -45,7 +70,7 @@ const CreateReceipt = () => {
   }
 
   const handleProductChange = (id: number, productName: string) => {
-    const selectedProduct = products.find(p => p.name === productName)
+     const selectedProduct = currentProducts.find(p => p.name === productName)
     if (selectedProduct) {
       setItems(items.map(item => {
         if (item.id === id) {
@@ -75,13 +100,18 @@ const CreateReceipt = () => {
 
   const handleSubmit = () => {
     // Validate form
-    if (items.some(item => !item.product || item.quantity === 0)) {
-      alert('Vui lòng điền đầy đủ thông tin')
+     if (!manufacturer) {
+       alert('Vui lòng chọn nhà sản xuất')
+       return
+     }
+
+     if (items.some(item => !item.product || item.quantity === 0 || item.price === 0)) {
+       alert('Vui lòng điền đầy đủ thông tin sản phẩm')
       return
     }
 
     const receiptData = {
-      date,
+       manufacturer,
       items,
       total: calculateTotal()
     }
@@ -107,7 +137,7 @@ const CreateReceipt = () => {
         <div className="create-receipt-header">
           <Package size={32} />
           <h1 className="create-receipt-title">Tạo phiếu nhập mới</h1>
-          <button className="btn-back" onClick={handleCancel}>
+          <button className="create-receipt-btn-back" onClick={handleCancel}>
             Trở lại
           </button>
         </div>
@@ -115,26 +145,37 @@ const CreateReceipt = () => {
         {/* Form */}
         <div className="create-receipt-form">
           {/* Date */}
-          <div className="form-section">
-            <label className="form-label">Ngày lập phiếu</label>
-            <input
-              type="date"
-              className="form-input-date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
+           {/* Manufacturer */}
+           <div className="create-receipt-form-section">
+             <label className="create-receipt-form-label">Nhà sản xuất</label>
+             <select
+               className="create-receipt-form-select"
+               value={manufacturer}
+               onChange={(e) => {
+                 setManufacturer(e.target.value)
+                 // reset items when change manufacturer
+                 setItems([{ id: 1, product: '', unit: '', quantity: 0, price: 0, total: 0 }])
+               }}
+             >
+               <option value="">Chọn nhà sản xuất</option>
+               {manufacturers.map((m) => (
+                 <option key={m.name} value={m.name}>{m.name}</option>
+               ))}
+             </select>
+           </div>
 
           {/* Products List */}
-          <div className="products-section">
-            <h3 className="section-title">Danh sách sản phẩm</h3>
+          <div className="create-receipt-products-section">
+            <h3 className="create-receipt-section-title">Danh sách sản phẩm</h3>
 
-            <div className="products-table-wrapper">
-              <table className="products-table">
+            <div className="create-receipt-products-table-wrapper">
+              <table className="create-receipt-products-table">
                 <thead>
                   <tr>
                     <th className="col-product">Sản phẩm</th>
+                    <th className="col-unit">Đơn vị</th>
                     <th className="col-quantity">Số lượng</th>
+                     <th className="col-price">Đơn giá</th>
                     <th className="col-total">Thành tiền</th>
                     <th className="col-action"></th>
                   </tr>
@@ -144,33 +185,48 @@ const CreateReceipt = () => {
                     <tr key={item.id}>
                       <td className="col-product">
                         <select
-                          className="product-select"
+                          className="create-receipt-product-select"
                           value={item.product}
                           onChange={(e) => handleProductChange(item.id, e.target.value)}
+                           disabled={!manufacturer}
                         >
                           <option value="">Chọn sản phẩm</option>
-                          {products.map((product) => (
+                            {currentProducts.map((product) => (
                             <option key={product.name} value={product.name}>
-                              {product.name} - {product.unit} - {formatCurrency(product.price)}
+                              {product.name}
                             </option>
                           ))}
                         </select>
                       </td>
+                      <td className="col-unit">
+                        <span className="create-receipt-unit-value">{item.unit || '--'}</span>
+                      </td>
                       <td className="col-quantity">
                         <input
                           type="number"
-                          className="quantity-input"
+                          className="create-receipt-quantity-input"
                           value={item.quantity || ''}
                           onChange={(e) => handleQuantityChange(item.id, Number(e.target.value))}
                           min="0"
+                            disabled={!manufacturer}
                         />
                       </td>
+                        <td className="col-price">
+                          <input
+                            type="number"
+                            className="create-receipt-price-input"
+                            value={item.price || ''}
+                            onChange={(e) => handlePriceChange(item.id, Number(e.target.value))}
+                            min="0"
+                            disabled={!manufacturer}
+                          />
+                        </td>
                       <td className="col-total">
-                        <span className="total-value">{item.total}</span>
+                          <span className="create-receipt-total-value">{formatCurrency(item.total)}</span>
                       </td>
                       <td className="col-action">
                         <button
-                          className="btn-remove-item"
+                          className="create-receipt-btn-remove-item"
                           onClick={() => handleRemoveItem(item.id)}
                           disabled={items.length === 1}
                           title="Xóa"
@@ -184,24 +240,24 @@ const CreateReceipt = () => {
               </table>
             </div>
 
-            <button className="btn-add-product" onClick={handleAddItem}>
+            <button className="create-receipt-btn-add-product" onClick={handleAddItem}>
               <Plus size={20} />
               <span>Thêm sản phẩm</span>
             </button>
           </div>
 
           {/* Total */}
-          <div className="total-section">
-            <span className="total-label">Tổng tiền:</span>
-            <span className="total-amount">{formatCurrency(calculateTotal())}</span>
+          <div className="create-receipt-total-section">
+            <span className="create-receipt-total-label">Tổng tiền:</span>
+            <span className="create-receipt-total-amount">{formatCurrency(calculateTotal())}</span>
           </div>
 
           {/* Action Buttons */}
-          <div className="form-actions">
-            <button className="btn-cancel" onClick={handleCancel}>
+          <div className="create-receipt-form-actions">
+            <button className="create-receipt-btn-cancel" onClick={handleCancel}>
               Hủy
             </button>
-            <button className="btn-submit" onClick={handleSubmit}>
+            <button className="create-receipt-btn-submit" onClick={handleSubmit}>
               Tạo phiếu nhập
             </button>
           </div>

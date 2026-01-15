@@ -6,8 +6,8 @@ const exportData = {
   agency: 'Đại lý Đại',
   date: '11/5/2024',
   items: [
-    { name: 'Nước ngọt Pepsi', unit: 'chai', quantity: 80, price: 9000 },
-    { name: 'Sữa Vinamilk', unit: 'hộp', quantity: 3, price: 60000 },
+    { name: 'Nước ngọt Pepsi', unit: 'chai', quantity: 80, batch: 'LO-20260110', price: 9000 },
+    { name: 'Sữa Vinamilk', unit: 'hộp', quantity: 3, batch: 'LO-20260110', price: 60000 },
   ],
 };
 
@@ -47,6 +47,7 @@ const ViewExport = () => {
                 <th>MẶT HÀNG</th>
                 <th>ĐƠN VỊ TÍNH</th>
                 <th>SỐ LƯỢNG</th>
+                <th>LÔ HÀNG</th>
                 <th>ĐƠN GIÁ</th>
                 <th>THÀNH TIỀN</th>
               </tr>
@@ -58,6 +59,7 @@ const ViewExport = () => {
                   <td>{item.name}</td>
                   <td>{item.unit}</td>
                   <td>{item.quantity}</td>
+                  <td>{item.batch}</td>
                   <td>{formatCurrency(item.price)}</td>
                   <td className="view-export-money">{formatCurrency(item.price * item.quantity)}</td>
                 </tr>

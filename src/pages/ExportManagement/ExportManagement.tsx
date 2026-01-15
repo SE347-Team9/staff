@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Truck, Search, Plus, AlertCircle, Eye, Edit, Trash2, List } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Truck, Search, AlertCircle, Eye, Edit, Trash2, List } from 'lucide-react'
 
 import { toast } from 'react-toastify';
 import './ExportManagement.css'
@@ -11,12 +11,12 @@ interface Export {
   agency: string
   date: string
   total: number
-  status: 'delivered' | 'pending' | 'cancelled'
-  statusLabel: string
+  status: 'approved' | 'pending'
 }
 
 const ExportManagement = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAgency, setSelectedAgency] = useState('all')
   const [startDate, setStartDate] = useState('')
@@ -25,8 +25,19 @@ const ExportManagement = () => {
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
   const [inventoryLoading, setInventoryLoading] = useState(false)
   // Stub handlers để tránh lỗi biên dịch
-  const handleCloseModal = () => setShowRequestModal(false);
-  const handleConfirmExport = () => {};
+  const handleCloseModal = () => {
+    setShowRequestModal(false)
+    setSelectedRequest(null)
+    setInventoryData(null)
+  }
+  const handleConfirmExport = () => {
+    if (inventoryData && inventoryData.allSufficient) {
+      setShowRequestModal(false)
+      setSelectedRequest(null)
+      setInventoryData(null)
+      navigate('/create-export', { state: { request: inventoryData } })
+    }
+  }
   const handleCheckInventory = (id: string) => {
     setSelectedRequest(id);
     setInventoryLoading(true);
@@ -35,11 +46,17 @@ const ExportManagement = () => {
     setTimeout(() => {
       const req = distributionRequests.find(r => r.id === id);
       if (req) {
-        setInventoryData(req);
+        // Check if all items have sufficient inventory
+        const allSufficient = req.items.every(item => item.requested <= item.available);
+        setInventoryData({
+          ...req,
+          allSufficient: allSufficient
+        });
       }
       setInventoryLoading(false);
     }, 1200);
   };
+
   const [inventoryData, setInventoryData] = useState<any>(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteExport, setDeleteExport] = useState<Export | null>(null);
@@ -48,39 +65,95 @@ const ExportManagement = () => {
   const distributionRequests = [
     {
       id: '1',
-      code: 'PX005',
+      code: 'DH001',
       agency: 'Đại lý Nghĩa',
-      date: '2025-10-11',
+      date: '11-10-2025',
       status: 'pending',
       items: [
         { name: 'Bia Hà Nội', requested: 12, available: 96 },
         { name: 'Gạo ST25', requested: 12, available: 190 }
       ]
-    }
-  ]
-
-  // Mock data
-  const [exports, setExports] = useState<Export[]>([
-    {
-      id: '1',
-      code: 'PX002',
-      agency: 'Đại lý Đại',
-      date: '11/5/2024',
-      total: 900000,
-      status: 'delivered',
-      statusLabel: 'Đã giao hàng'
     },
     {
       id: '2',
-      code: 'PX001',
-      agency: 'Đại lý Nghĩa',
-      date: '10/5/2024',
-      total: 1530000,
-      status: 'delivered',
-      statusLabel: 'Đã giao hàng'
+      code: 'DH002',
+      agency: 'Đại lý Đại',
+      date: '10-10-2025',
+      status: 'pending',
+      items: [
+        { name: 'Bia Hà Nội', requested: 50, available: 30 },
+        { name: 'Sữa Vinamilk', requested: 25, available: 20 }
+      ]
     }
-  ]);
+  ]
 
+  const defaultExports: Export[] = []
+
+  const [exports, setExports] = useState<Export[]>(defaultExports);
+
+  const loadExports = () => {
+    const saved = localStorage.getItem('customExports')
+    console.log('Loading exports from localStorage:', saved)
+    if (saved) {
+      try {
+        const parsed: Export[] = JSON.parse(saved)
+        console.log('Parsed exports:', parsed)
+        if (Array.isArray(parsed)) {
+          console.log('Setting exports state:', parsed)
+          setExports(parsed)
+        } else {
+          setExports(defaultExports)
+        }
+      } catch (e) {
+        console.error('Failed to parse saved exports', e)
+        setExports(defaultExports)
+      }
+    } else {
+      console.log('No exports in localStorage, setting to empty')
+      setExports(defaultExports)
+    }
+  }
+
+  // Load exports when location changes (including pathname)
+  useEffect(() => {
+    console.log('Location pathname changed to:', location.pathname)
+    if (location.pathname === '/export-management') {
+      console.log('Loading exports due to pathname change')
+      loadExports()
+    }
+  }, [location.pathname])
+
+  // Also load on component mount
+  useEffect(() => {
+    console.log('ExportManagement component mounted, loading exports')
+    loadExports()
+  }, [])
+
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('Window focused, reloading exports')
+      loadExports()
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [])
+
+
+  useEffect(() => {
+    const handleExportsUpdated = (event: any) => {
+      console.log('Custom event exportsUpdated received:', event.detail)
+      if (event.detail && event.detail.exports) {
+        setExports(event.detail.exports)
+      } else {
+        loadExports()
+      }
+    }
+    window.addEventListener('exportsUpdated', handleExportsUpdated)
+    return () => window.removeEventListener('exportsUpdated', handleExportsUpdated)
+  }, [])
+
+  // Do NOT persist exports back to localStorage here to avoid overwriting
+  // newly created records from CreateExport during initial render.
   const totalExports = exports.length
   const totalAmount = exports.reduce((sum, exp) => sum + exp.total, 0)
 
@@ -125,10 +198,6 @@ const ExportManagement = () => {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setDeleteExport(null);
-  }
-
-  const handleCreateExport = () => {
-    navigate('/create-export')
   }
 
   const handleConfirmFeedback = () => {
@@ -187,10 +256,6 @@ const ExportManagement = () => {
             <button className="export-management__action-btn export-management__action-btn--orange" onClick={handleConfirmFeedback}>
               <AlertCircle size={20} />
               <span>Xác nhận yêu cầu phân phối</span>
-            </button>
-            <button className="export-management__action-btn export-management__action-btn--blue" onClick={handleCreateExport}>
-              <Plus size={20} />
-              <span>Tạo phiếu xuất</span>
             </button>
           </div>
         </div>
@@ -267,9 +332,14 @@ const ExportManagement = () => {
                         <span className="export-total-amount">{formatCurrency(exp.total)}</span>
                       </td>
                       <td className="col-status">
-                        <span className={`status-badge status-${exp.status}`}>
-                          {exp.statusLabel}
-                        </span>
+                        <select
+                          className="status-select"
+                          value={exp.status}
+                          onChange={(e) => setExports(prev => prev.map(item => item.id === exp.id ? { ...item, status: e.target.value as 'approved' | 'pending' } : item))}
+                        >
+                          <option value="approved">Đã duyệt</option>
+                          <option value="pending">Chưa duyệt</option>
+                        </select>
                       </td>
                       <td className="col-actions">
                         <div className="export-management__action-buttons">
@@ -371,40 +441,83 @@ const ExportManagement = () => {
                               </div>
                             ) : inventoryData ? (
                               <div className="inventory-details">
-                                <div className="inventory-status">
-                                  <span className="status-label">Chi tiết tồn kho:</span>
-                                  <span className="status-badge status-sufficient">ĐỦ TỒN KHO</span>
-                                </div>
-                                
-                                <div className="inventory-items">
-                                  {inventoryData.items.map((item: any, idx: number) => (
-                                    <div key={idx} className="inventory-item">
-                                      <div className="item-info">
-                                        <span className="item-name">{item.name}</span>
-                                        <span className="item-quantity">
-                                          Yêu cầu: {item.requested} | Có sẵn: {item.available}
-                                        </span>
-                                      </div>
-                                      <span className="item-status">{item.requested}/{item.available} ✓</span>
+                                {inventoryData.allSufficient ? (
+                                  <>
+                                    <div className="inventory-status">
+                                      <span className="status-label">Chi tiết tồn kho:</span>
+                                      <span className="status-badge status-sufficient">ĐỦ TỒN KHO</span>
                                     </div>
-                                  ))}
-                                </div>
+                                    
+                                    <div className="inventory-items">
+                                      {inventoryData.items.map((item: any, idx: number) => (
+                                        <div key={idx} className="inventory-item">
+                                          <div className="item-info">
+                                            <span className="item-name">{item.name}</span>
+                                            <span className="item-quantity">
+                                              Yêu cầu: {item.requested} | Có sẵn: {item.available}
+                                            </span>
+                                          </div>
+                                          <span className="item-status">{item.requested}/{item.available} ✓</span>
+                                        </div>
+                                      ))}
+                                    </div>
 
-                                <div className="inventory-summary">
-                                  <span className="summary-text">Tóm tắt:</span>
-                                  <span className="summary-result">
-                                    ✓ Tất cả mặt hàng đều đủ tồn kho - Có thể xác nhận xuất hàng
-                                  </span>
-                                </div>
+                                    <div className="inventory-summary">
+                                      <span className="summary-text">Tóm tắt:</span>
+                                      <span className="summary-result">
+                                        ✓ Tất cả mặt hàng đều đủ tồn kho - Có thể xác nhận xuất hàng
+                                      </span>
+                                    </div>
 
-                                <div className="inventory-actions">
-                                  <button className="btn-confirm" onClick={handleConfirmExport}>
-                                    ✓ Xác nhận
-                                  </button>
-                                  <button className="btn-pause" onClick={handlePauseRequest}>
-                                    ⊗ Tạm hoãn
-                                  </button>
-                                </div>
+                                    <div className="inventory-actions">
+                                      <button className="btn-confirm" onClick={handleConfirmExport}>
+                                        ✓ Xác nhận
+                                      </button>
+                                      <button className="btn-pause" onClick={handlePauseRequest}>
+                                        ⊗ Tạm hoãn
+                                      </button>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="inventory-status">
+                                      <span className="status-label">Chi tiết tồn kho:</span>
+                                      <span className="status-badge status-insufficient">KHÔNG ĐỦ TỒN KHO</span>
+                                    </div>
+                                    
+                                    <div className="inventory-items">
+                                      {inventoryData.items.map((item: any, idx: number) => {
+                                        const isInsufficient = item.requested > item.available;
+                                        return (
+                                          <div key={idx} className={`inventory-item ${isInsufficient ? 'insufficient' : ''}`}>
+                                            <div className="item-info">
+                                              <span className="item-name">{item.name}</span>
+                                              <span className="item-quantity">
+                                                Yêu cầu: {item.requested} | Có sẵn: {item.available}
+                                              </span>
+                                            </div>
+                                            <span className={`item-status ${isInsufficient ? 'error' : ''}`}>
+                                              {isInsufficient ? `✗ Thiếu ${item.requested - item.available}` : `${item.requested}/${item.available} ✓`}
+                                            </span>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+
+                                    <div className="inventory-summary">
+                                      <span className="summary-text">Tóm tắt:</span>
+                                      <span className="summary-result error-text">
+                                        ✗ Một số mặt hàng không đủ tồn kho - Không thể xác nhận xuất hàng
+                                      </span>
+                                    </div>
+
+                                    <div className="inventory-actions">
+                                      <button className="btn-pause" onClick={handlePauseRequest}>
+                                        ⊗ Tạm hoãn
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                             ) : null}
                           </div>

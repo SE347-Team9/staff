@@ -198,34 +198,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .regulations__action-btn {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex;\n  align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border-radius: 10px;
-  border: 2px solid;
-  background: white;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.regulations__action-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
 .regulations__action-btn--view {
-  color: #3b82f6;
-  border-color: #dbeafe;
+  background: #f0f9ff;
+  color: #0369a1;
 }
 
 .regulations__action-btn--view:hover {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  background: #e0f2fe;
+  transform: scale(1.05);
 }
 
 /* No Data State */

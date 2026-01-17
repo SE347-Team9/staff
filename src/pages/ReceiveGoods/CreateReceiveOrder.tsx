@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Package, Plus, X } from 'lucide-react'
+import { Package, Plus, X, Upload } from 'lucide-react'
+import * as XLSX from 'xlsx'
 import './CreateReceiveOrder.css'
 
 interface ReceiveOrderItem {
@@ -17,6 +18,7 @@ interface ReceiveOrderItem {
 
 const CreateReceiveOrder = () => {
   const navigate = useNavigate()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [manufacturer, setManufacturer] = useState('')
   const [items, setItems] = useState<ReceiveOrderItem[]>([
     { id: 1, product: '', unit: '', warehouse: '', quantity: 0, price: 0, mfgDate: '', expDate: '', total: 0 }
@@ -129,6 +131,112 @@ const CreateReceiveOrder = () => {
     }))
   }
 
+  const convertExcelDate = (excelDateValue: any): string => {
+    if (!excelDateValue) return ''
+    
+    // If it's already a date string in DD/MM/YYYY format, convert to YYYY-MM-DD
+    if (typeof excelDateValue === 'string') {
+      const parts = excelDateValue.split('/')
+      if (parts.length === 3) {
+        const [day, month, year] = parts
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      }
+    }
+    
+    // If it's a number (Excel serial date), convert it
+    if (typeof excelDateValue === 'number') {
+      const excelDateStart = new Date(1900, 0, 1)
+      const excelDate = new Date(excelDateStart.getTime() + (excelDateValue - 1) * 24 * 60 * 60 * 1000)
+      const year = excelDate.getFullYear()
+      const month = String(excelDate.getMonth() + 1).padStart(2, '0')
+      const day = String(excelDate.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    }
+    
+    return ''
+  }
+
+  const handleImportExcel = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result as ArrayBuffer
+        const workbook = XLSX.read(data, { type: 'array' })
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+        const jsonData = XLSX.utils.sheet_to_json(worksheet) as any[]
+
+        if (jsonData.length === 0) {
+          alert('File Excel không có dữ liệu')
+          return
+        }
+
+        // Convert Excel data to items format
+        const importedItems: ReceiveOrderItem[] = jsonData.map((row, index) => {
+          const product = row['Sản phẩm'] || row['Product'] || ''
+          const quantity = Number(row['Số lượng'] || row['Quantity'] || 0)
+          const price = Number(row['Đơn giá'] || row['Unit Price'] || 0)
+          let warehouse = row['Kho'] || row['Warehouse'] || ''
+          
+          // Normalize warehouse name to match warehouses list
+          if (warehouse) {
+            const warehouseLower = warehouse.toLowerCase().trim()
+            // Map common warehouse names
+            if (warehouseLower.includes('thường')) {
+              warehouse = 'Kho thường'
+            } else if (warehouseLower.includes('mát')) {
+              warehouse = 'Kho mát'
+            } else if (warehouseLower.includes('đông') || warehouseLower.includes('lạnh')) {
+              warehouse = 'Kho đông lạnh'
+            } else {
+              warehouse = ''
+            }
+          }
+          
+          const mfgDate = convertExcelDate(row['NSX'] || row['Manufacturing Date'] || '')
+          const expDate = convertExcelDate(row['HSD'] || row['Expiry Date'] || '')
+
+          return {
+            id: index + 1,
+            product,
+            unit: '', // Unit sẽ được tự động điền từ currentProducts
+            warehouse,
+            quantity,
+            price,
+            mfgDate,
+            expDate,
+            total: quantity * price
+          }
+        })
+
+        // Try to match units from currentProducts
+        const matchedItems = importedItems.map(item => {
+          const matchedProduct = currentProducts.find(p => p.name === item.product)
+          return {
+            ...item,
+            unit: matchedProduct?.unit || ''
+          }
+        })
+
+        setItems(matchedItems)
+        alert(`Đã import thành công ${matchedItems.length} sản phẩm`)
+      } catch (error) {
+        console.error('Error importing Excel:', error)
+        alert('Lỗi khi đọc file Excel. Vui lòng kiểm tra định dạng file.')
+      }
+    }
+
+    reader.readAsArrayBuffer(file)
+    // Reset input để có thể chọn file cùng tên lần nữa
+    event.target.value = ''
+  }
+
   const handleSubmit = () => {
     // Validate form
     if (!manufacturer) {
@@ -196,7 +304,20 @@ const CreateReceiveOrder = () => {
 
           {/* Products List */}
           <div className="products-section">
-            <h3 className="section-title">Danh sách sản phẩm</h3>
+            <div className="section-header">
+              <h3 className="section-title">Danh sách sản phẩm</h3>
+              <button className="btn-import-excel" onClick={handleImportExcel} disabled={!manufacturer}>
+                <Upload size={20} />
+                <span>Import từ Excel</span>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+            </div>
 
             <div className="products-table-wrapper">
               <table className="products-table">
@@ -235,17 +356,20 @@ const CreateReceiveOrder = () => {
                         <span className="unit-value">{item.unit || '--'}</span>
                       </td>
                       <td className="col-warehouse">
-                        <select
-                          className="warehouse-select"
-                          value={item.warehouse}
-                          onChange={(e) => handleWarehouseChange(item.id, e.target.value)}
-                          disabled={!manufacturer}
-                        >
-                          <option value="">Chọn kho</option>
-                          {warehouses.map((wh) => (
-                            <option key={wh} value={wh}>{wh}</option>
-                          ))}
-                        </select>
+                        {manufacturer ? (
+                          <select
+                            className="warehouse-select"
+                            value={item.warehouse}
+                            onChange={(e) => handleWarehouseChange(item.id, e.target.value)}
+                          >
+                            <option value="">Chọn kho</option>
+                            {warehouses.map((wh) => (
+                              <option key={wh} value={wh}>{wh}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="warehouse-placeholder">--</span>
+                        )}
                       </td>
                       <td className="col-quantity">
                         <input

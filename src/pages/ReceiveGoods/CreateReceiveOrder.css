@@ -133,6 +133,21 @@
   white-space: nowrap;
 }
 
+.create-receipt-page .section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  justify-content: space-between;
+}
+
+.create-receipt-page .section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
 .create-receipt-page .products-table tbody tr {
   border-bottom: 1px solid #e2e8f0;
   transition: background 0.15s ease;
@@ -154,7 +169,8 @@
 }
 
 .create-receipt-page .col-product {
-  min-width: 200px;
+  min-width: 140px;
+  width: 140px;
 }
 
 .create-receipt-page .col-unit {
@@ -233,6 +249,13 @@
 }
 
 .create-receipt-page .unit-value {
+  color: #334155;
+  font-size: 13px;
+}
+
+.create-receipt-page .warehouse-placeholder {
+  color: #cbd5e1;
+  font-size: 13px;
   display: inline-block;
   min-width: 70px;
   padding: 10px 12px;
@@ -298,8 +321,34 @@
 
 .create-receipt-page .btn-add-product:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.35);
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.create-receipt-page .btn-import-excel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.create-receipt-page .btn-import-excel:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.create-receipt-page .btn-import-excel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Total Section */
